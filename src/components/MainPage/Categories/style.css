@@ -48,7 +48,7 @@
   justify-content: space-between;
   background: #ffffff;
   border: 1px solid #e3e8ef;
-  border-radius: 16px;
+  border-radius: 8px;
   padding: 20px 16px 16px 16px;
   text-decoration: none;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
@@ -73,7 +73,7 @@
   color: #ffffff;
   background: #f28a1d;
   padding: 4px 10px;
-  border-radius: 20px;
+  border-radius: 8px;
   box-shadow: 0 4px 10px rgba(242, 138, 29, 0.25);
 }
 
