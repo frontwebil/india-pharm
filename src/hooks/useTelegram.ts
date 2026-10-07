@@ -1,6 +1,16 @@
-const tg = window.Telegram?.WebApp;
+"use client";
+
+import { useEffect, useState } from "react";
 
 export function useTelegram() {
+  const [tg, setTg] = useState(null);
+
+  useEffect(() => {
+    if (window.Telegram?.WebApp) {
+      setTg(window.Telegram.WebApp);
+    }
+  }, []);
+
   const onClose = () => {
     tg?.close();
   };
