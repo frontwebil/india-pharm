@@ -13,6 +13,14 @@ const nextConfig: NextConfig = {
       },
     },
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "india-pharm.com",
+      },
+    ],
+  },
 };
 
 export default nextConfig;
