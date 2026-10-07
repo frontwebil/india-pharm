@@ -8,10 +8,10 @@ export default function TelegramGuard() {
   useEffect(() => {
     const tg = window.Telegram?.WebApp;
 
-    if (!tg?.initData) {
-      window.location.replace(BOT_URL);
-      return;
-    }
+    // if (!tg?.initData) {
+    //   window.location.replace(BOT_URL);
+    //   return;
+    // }
 
     tg.ready();
   }, []);
