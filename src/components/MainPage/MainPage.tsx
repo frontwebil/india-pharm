@@ -10,7 +10,7 @@ export default function MainPage() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col p-4 text-foreground">
+    <main className="flex min-h-screen flex-col p-4 text-foreground bg-white">
       <header className="mb-6">
         <h1 className="text-xl font-bold">💊 India Pharm</h1>
 
