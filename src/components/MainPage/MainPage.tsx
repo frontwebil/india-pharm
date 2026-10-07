@@ -5,6 +5,10 @@ import { useTelegram } from "@/hooks/useTelegram";
 export default function MainPage() {
   const { tg, user, queryId } = useTelegram();
 
+  if (!tg) {
+    return null;
+  }
+
   return (
     <main className="flex min-h-screen flex-col p-4 text-foreground">
       <header className="mb-6">
