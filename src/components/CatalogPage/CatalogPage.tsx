@@ -47,6 +47,37 @@ export function CatalogPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const PRODUCTS_PER_PAGE = 36;
+
+  const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
+
+  const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
+
+  const paginatedProducts = products.slice(
+    startIndex,
+    startIndex + PRODUCTS_PER_PAGE,
+  );
+
+  const paginationPages = Array.from(
+    { length: totalPages },
+    (_, index) => index + 1,
+  ).filter((page) => {
+    if (totalPages <= 5) return true;
+
+    if (currentPage <= 3) {
+      return page <= 3 || page === totalPages;
+    }
+
+    if (currentPage >= totalPages - 2) {
+      return page === 1 || page >= totalPages - 2;
+    }
+
+    return (
+      page === 1 || page === totalPages || Math.abs(page - currentPage) <= 1
+    );
+  });
 
   useEffect(() => {
     async function getProducts() {
@@ -71,6 +102,15 @@ export function CatalogPage() {
     getProducts();
   }, []);
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+
+    document.querySelector(".catalog-page-heading")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
+
   useEffect(() => {
     document.body.style.overflow = isFilterOpen ? "hidden" : "";
 
@@ -78,6 +118,10 @@ export function CatalogPage() {
       document.body.style.overflow = "";
     };
   }, [isFilterOpen]);
+
+  useEffect(() => {
+    setCurrentPage((prev) => Math.min(prev, Math.max(1, totalPages)));
+  }, [totalPages]);
 
   return (
     <main className="catalog-page">
@@ -174,11 +218,83 @@ export function CatalogPage() {
             ) : products.length === 0 ? (
               <div className="catalog-state">Товарів поки немає.</div>
             ) : (
-              <div className="catalog-products-grid">
-                {products.map((product) => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
-              </div>
+              <>
+                <div className="catalog-products-grid">
+                  {paginatedProducts.map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                  ))}
+                </div>
+
+                {totalPages > 1 && (
+                  <div className="catalog-pagination">
+                    <span className="catalog-pagination-info">
+                      Показано {startIndex + 1}–
+                      {Math.min(
+                        startIndex + PRODUCTS_PER_PAGE,
+                        products.length,
+                      )}{" "}
+                      із {products.length}
+                    </span>
+
+                    <div className="catalog-pagination-controls">
+                      <button
+                        type="button"
+                        className="catalog-page-button"
+                        disabled={currentPage === 1}
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        aria-label="Попередня сторінка"
+                      >
+                        ←
+                      </button>
+
+                      {paginationPages.map((page, index) => {
+                        const previousPage = paginationPages[index - 1];
+                        const showDots =
+                          previousPage && page - previousPage > 1;
+
+                        return (
+                          <>
+                            {showDots && (
+                              <span className="catalog-pagination-dots">
+                                ...
+                              </span>
+                            )}
+                            <span
+                              key={page}
+                              className="catalog-pagination-item"
+                            >
+                              <button
+                                type="button"
+                                className={`catalog-page-button ${
+                                  currentPage === page
+                                    ? "catalog-page-button-active"
+                                    : ""
+                                }`}
+                                aria-current={
+                                  currentPage === page ? "page" : undefined
+                                }
+                                onClick={() => handlePageChange(page)}
+                              >
+                                {page}
+                              </button>
+                            </span>
+                          </>
+                        );
+                      })}
+
+                      <button
+                        type="button"
+                        className="catalog-page-button"
+                        disabled={currentPage === totalPages}
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        aria-label="Наступна сторінка"
+                      >
+                        →
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </>
             )}
           </section>
         </div>

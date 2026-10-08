@@ -390,3 +390,135 @@
     font-size: 10px;
   }
 }
+
+/* PAGINATION */
+
+.catalog-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid #e3e8ef;
+}
+
+.catalog-pagination-info {
+  color: #718096;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.catalog-pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.catalog-page-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 8px;
+  border: 1px solid #e3e8ef;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #162866;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.catalog-page-button:hover:not(:disabled) {
+  border-color: #162866;
+  background: #f0f4fd;
+}
+
+.catalog-page-button-active {
+  border-color: #162866;
+  background: #162866;
+  color: #ffffff;
+}
+
+.catalog-page-button-active:hover:not(:disabled) {
+  background: #203a82;
+  color: #ffffff;
+}
+
+.catalog-page-button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .catalog-pagination {
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    margin-top: 22px;
+  }
+
+  .catalog-pagination-controls {
+    gap: 5px;
+    max-width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .catalog-page-button {
+    min-width: 34px;
+    height: 34px;
+  }
+}
+
+.catalog-pagination-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.catalog-pagination-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  color: #718096;
+  font-size: 13px;
+  font-weight: 700;
+  user-select: none;
+}
+
+.catalog-pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 480px) {
+  .catalog-pagination-controls {
+    gap: 4px;
+  }
+
+  .catalog-pagination-item {
+    gap: 4px;
+  }
+
+  .catalog-page-button {
+    min-width: 32px;
+    height: 34px;
+    padding: 0 6px;
+  }
+
+  .catalog-pagination-dots {
+    min-width: 12px;
+  }
+}
