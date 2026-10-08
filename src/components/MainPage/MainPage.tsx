@@ -1,58 +1,17 @@
 "use client";
 
 import { useTelegram } from "@/hooks/useTelegram";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Header } from "./Header/Header";
 import { Hero } from "./Hero/Hero";
 import { Categories } from "./Categories/Categories";
 import { CategoriesTopSales } from "./Categories/CategoriesTopSales";
 
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  [key: string]: unknown;
-}
-
 export default function MainPage() {
   const { tg, user, queryId } = useTelegram();
 
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(false);
-
   useEffect(() => {
     if (!tg) return;
-
-    const getProducts = async () => {
-      try {
-        setLoading(true);
-
-        const response = await fetch(
-          "https://india-pharm.com/api.php?lang=ua&format=text",
-          {
-            headers: {
-              "X-Api-Token": "03f55c2ca1ef6694c04c28e6371296e6f062aba6e3352d8a",
-            },
-          },
-        );
-
-        if (!response.ok) {
-          throw new Error(`HTTP error: ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        console.log("Products:", data);
-
-        setProducts(data);
-      } catch (error) {
-        console.error("Failed to load products:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    getProducts();
   }, [tg]);
 
   if (!tg) {
@@ -63,7 +22,9 @@ export default function MainPage() {
     <main className="min-h-screenbg-white">
       <Header />
       <Hero />
-      <section className="rounded-xl border border-neutral-800 p-4">
+      <CategoriesTopSales />
+      <Categories />
+      {/* <section className="rounded-xl border border-neutral-800 p-4">
         <h2 className="mb-4 text-lg font-semibold">Telegram User</h2>
 
         <div className="space-y-2 text-sm">
@@ -92,9 +53,9 @@ export default function MainPage() {
             {queryId ?? "Немає даних"}
           </p>
         </div>
-      </section>
+      </section> */}
 
-      <section className="mt-4 flex-1">
+      {/* <section className="mt-4 flex-1">
         {loading && <p>Завантаження товарів...</p>}
 
         {!loading && (
@@ -102,9 +63,7 @@ export default function MainPage() {
             {JSON.stringify(products, null, 2)}
           </pre>
         )}
-      </section>
-      <CategoriesTopSales />
-      <Categories />
+      </section> */}
     </main>
   );
 }
