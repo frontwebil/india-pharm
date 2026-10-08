@@ -49,7 +49,7 @@ export function CategoriesTopSales() {
               <div className="">
                 <div className="top-product-image-wrapper">
                   <Image
-                    src={product.images?.[0] as string}
+                    src={(product.images as string[])?.[0]}
                     alt={product.name}
                     width={200}
                     height={160}
