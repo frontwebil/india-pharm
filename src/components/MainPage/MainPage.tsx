@@ -63,10 +63,7 @@ export default function MainPage() {
     <main className="min-h-screenbg-white">
       <Header />
       <Hero />
-      <CategoriesTopSales />
-      <Categories />
-
-      {/* <section className="rounded-xl border border-neutral-800 p-4">
+      <section className="rounded-xl border border-neutral-800 p-4">
         <h2 className="mb-4 text-lg font-semibold">Telegram User</h2>
 
         <div className="space-y-2 text-sm">
@@ -105,7 +102,10 @@ export default function MainPage() {
             {JSON.stringify(products, null, 2)}
           </pre>
         )}
-      </section> */}
+      </section>
+      <CategoriesTopSales />
+      <Categories />
+
     </main>
   );
 }
