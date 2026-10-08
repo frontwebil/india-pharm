@@ -6,6 +6,7 @@ import { IoOptionsOutline, IoCloseOutline } from "react-icons/io5";
 import { Product } from "@/generated/prisma/browser";
 import "./style.css";
 import { ProductCard } from "./ProductCard/ProductCard";
+import { Header } from "../MainPage/Header/Header";
 
 const categories = [
   {
@@ -124,181 +125,184 @@ export function CatalogPage() {
   }, [totalPages]);
 
   return (
-    <main className="catalog-page">
-      <div className="catalog-page-container">
-        <div className="catalog-page-heading">
-          <div>
-            <h1 className="catalog-page-title">Каталог товарів</h1>
-            <p className="catalog-page-description">
-              Оберіть потрібну категорію та перегляньте доступні товари.
-            </p>
-          </div>
-          <button
-            type="button"
-            className="catalog-filter-toggle"
-            onClick={() => setIsFilterOpen(true)}
-          >
-            <IoOptionsOutline />
-            Категорії
-          </button>
-        </div>
-        <div className="catalog-layout">
-          {isFilterOpen && (
+    <>
+      <Header />
+      <main className="catalog-page">
+        <div className="catalog-page-container">
+          <div className="catalog-page-heading">
+            <div>
+              <h1 className="catalog-page-title">Каталог товарів</h1>
+              <p className="catalog-page-description">
+                Оберіть потрібну категорію та перегляньте доступні товари.
+              </p>
+            </div>
             <button
               type="button"
-              className="catalog-filter-overlay"
-              aria-label="Закрити фільтр"
-              onClick={() => setIsFilterOpen(false)}
-            />
-          )}
-
-          <aside
-            className={`catalog-sidebar ${
-              isFilterOpen ? "catalog-sidebar-open" : ""
-            }`}
-          >
-            <div className="catalog-sidebar-header">
-              <h2>Категорії</h2>
-
+              className="catalog-filter-toggle"
+              onClick={() => setIsFilterOpen(true)}
+            >
+              <IoOptionsOutline />
+              Категорії
+            </button>
+          </div>
+          <div className="catalog-layout">
+            {isFilterOpen && (
               <button
                 type="button"
-                className="catalog-sidebar-close"
-                aria-label="Закрити категорії"
+                className="catalog-filter-overlay"
+                aria-label="Закрити фільтр"
+                onClick={() => setIsFilterOpen(false)}
+              />
+            )}
+
+            <aside
+              className={`catalog-sidebar ${
+                isFilterOpen ? "catalog-sidebar-open" : ""
+              }`}
+            >
+              <div className="catalog-sidebar-header">
+                <h2>Категорії</h2>
+
+                <button
+                  type="button"
+                  className="catalog-sidebar-close"
+                  aria-label="Закрити категорії"
+                  onClick={() => setIsFilterOpen(false)}
+                >
+                  <IoCloseOutline />
+                </button>
+              </div>
+
+              <Link
+                href="/catalog"
+                className="catalog-sidebar-all"
                 onClick={() => setIsFilterOpen(false)}
               >
-                <IoCloseOutline />
-              </button>
-            </div>
+                Усі товари
+                {products.length > 0 && <span>{products.length}</span>}
+              </Link>
 
-            <Link
-              href="/catalog"
-              className="catalog-sidebar-all"
-              onClick={() => setIsFilterOpen(false)}
-            >
-              Усі товари
-              {products.length > 0 && <span>{products.length}</span>}
-            </Link>
+              <nav className="catalog-sidebar-nav">
+                {categories.map((category) => (
+                  <div className="catalog-sidebar-group" key={category.title}>
+                    <h3>{category.title}</h3>
 
-            <nav className="catalog-sidebar-nav">
-              {categories.map((category) => (
-                <div className="catalog-sidebar-group" key={category.title}>
-                  <h3>{category.title}</h3>
-
-                  <div className="catalog-sidebar-links">
-                    {category.items.map(([title, slug]) => (
-                      <Link
-                        href={`/catalog/${slug}`}
-                        key={slug}
-                        onClick={() => setIsFilterOpen(false)}
-                      >
-                        {title}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </nav>
-          </aside>
-
-          <section className="catalog-results">
-            <div className="catalog-results-header">
-              <h2>Усі товари</h2>
-
-              {!isLoading && !error && (
-                <span className="catalog-results-count">
-                  {products.length} товарів
-                </span>
-              )}
-            </div>
-
-            {isLoading ? (
-              <div className="catalog-state">Завантажуємо товари...</div>
-            ) : error ? (
-              <div className="catalog-state catalog-state-error">{error}</div>
-            ) : products.length === 0 ? (
-              <div className="catalog-state">Товарів поки немає.</div>
-            ) : (
-              <>
-                <div className="catalog-products-grid">
-                  {paginatedProducts.map((product) => (
-                    <ProductCard key={product.id} product={product} />
-                  ))}
-                </div>
-
-                {totalPages > 1 && (
-                  <div className="catalog-pagination">
-                    <span className="catalog-pagination-info">
-                      Показано {startIndex + 1}–
-                      {Math.min(
-                        startIndex + PRODUCTS_PER_PAGE,
-                        products.length,
-                      )}{" "}
-                      із {products.length}
-                    </span>
-
-                    <div className="catalog-pagination-controls">
-                      <button
-                        type="button"
-                        className="catalog-page-button"
-                        disabled={currentPage === 1}
-                        onClick={() => handlePageChange(currentPage - 1)}
-                        aria-label="Попередня сторінка"
-                      >
-                        ←
-                      </button>
-
-                      {paginationPages.map((page, index) => {
-                        const previousPage = paginationPages[index - 1];
-                        const showDots =
-                          previousPage && page - previousPage > 1;
-
-                        return (
-                          <>
-                            {showDots && (
-                              <span className="catalog-pagination-dots">
-                                ...
-                              </span>
-                            )}
-                            <span
-                              key={page}
-                              className="catalog-pagination-item"
-                            >
-                              <button
-                                type="button"
-                                className={`catalog-page-button ${
-                                  currentPage === page
-                                    ? "catalog-page-button-active"
-                                    : ""
-                                }`}
-                                aria-current={
-                                  currentPage === page ? "page" : undefined
-                                }
-                                onClick={() => handlePageChange(page)}
-                              >
-                                {page}
-                              </button>
-                            </span>
-                          </>
-                        );
-                      })}
-
-                      <button
-                        type="button"
-                        className="catalog-page-button"
-                        disabled={currentPage === totalPages}
-                        onClick={() => handlePageChange(currentPage + 1)}
-                        aria-label="Наступна сторінка"
-                      >
-                        →
-                      </button>
+                    <div className="catalog-sidebar-links">
+                      {category.items.map(([title, slug]) => (
+                        <Link
+                          href={`/catalog/${slug}`}
+                          key={slug}
+                          onClick={() => setIsFilterOpen(false)}
+                        >
+                          {title}
+                        </Link>
+                      ))}
                     </div>
                   </div>
+                ))}
+              </nav>
+            </aside>
+
+            <section className="catalog-results">
+              <div className="catalog-results-header">
+                <h2>Усі товари</h2>
+
+                {!isLoading && !error && (
+                  <span className="catalog-results-count">
+                    {products.length} товарів
+                  </span>
                 )}
-              </>
-            )}
-          </section>
+              </div>
+
+              {isLoading ? (
+                <div className="catalog-state">Завантажуємо товари...</div>
+              ) : error ? (
+                <div className="catalog-state catalog-state-error">{error}</div>
+              ) : products.length === 0 ? (
+                <div className="catalog-state">Товарів поки немає.</div>
+              ) : (
+                <>
+                  <div className="catalog-products-grid">
+                    {paginatedProducts.map((product) => (
+                      <ProductCard key={product.id} product={product} />
+                    ))}
+                  </div>
+
+                  {totalPages > 1 && (
+                    <div className="catalog-pagination">
+                      <span className="catalog-pagination-info">
+                        Показано {startIndex + 1}–
+                        {Math.min(
+                          startIndex + PRODUCTS_PER_PAGE,
+                          products.length,
+                        )}{" "}
+                        із {products.length}
+                      </span>
+
+                      <div className="catalog-pagination-controls">
+                        <button
+                          type="button"
+                          className="catalog-page-button"
+                          disabled={currentPage === 1}
+                          onClick={() => handlePageChange(currentPage - 1)}
+                          aria-label="Попередня сторінка"
+                        >
+                          ←
+                        </button>
+
+                        {paginationPages.map((page, index) => {
+                          const previousPage = paginationPages[index - 1];
+                          const showDots =
+                            previousPage && page - previousPage > 1;
+
+                          return (
+                            <>
+                              {showDots && (
+                                <span className="catalog-pagination-dots">
+                                  ...
+                                </span>
+                              )}
+                              <span
+                                key={page}
+                                className="catalog-pagination-item"
+                              >
+                                <button
+                                  type="button"
+                                  className={`catalog-page-button ${
+                                    currentPage === page
+                                      ? "catalog-page-button-active"
+                                      : ""
+                                  }`}
+                                  aria-current={
+                                    currentPage === page ? "page" : undefined
+                                  }
+                                  onClick={() => handlePageChange(page)}
+                                >
+                                  {page}
+                                </button>
+                              </span>
+                            </>
+                          );
+                        })}
+
+                        <button
+                          type="button"
+                          className="catalog-page-button"
+                          disabled={currentPage === totalPages}
+                          onClick={() => handlePageChange(currentPage + 1)}
+                          aria-label="Наступна сторінка"
+                        >
+                          →
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+            </section>
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }
