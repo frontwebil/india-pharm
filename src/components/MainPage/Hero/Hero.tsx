@@ -16,11 +16,18 @@ export function Hero() {
     <section className="hero">
       <div className="hero-banner">
         <Image
-          src="/hero-couple.webp"
+          src="/hero-img.webp"
           alt="Препарати для чоловічого та жіночого здоров'я"
           fill
           priority
-          className="hero-banner-img"
+          className="hero-banner-img desktop-only"
+        />
+        <Image
+          src="/hero-img-mobile.webp"
+          alt="Препарати для чоловічого та жіночого здоров'я"
+          fill
+          priority
+          className="hero-banner-img mobile-only"
         />
         <div className="hero-banner-overlay" />
 

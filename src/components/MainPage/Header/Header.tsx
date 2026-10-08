@@ -79,8 +79,8 @@ export function Header() {
           <Link href="/" className="header-logo-link">
             <Image
               src="/header-logo.webp"
-              width={400}
-              height={400}
+              width={168}
+              height={84}
               alt="India Pharm"
               className="header-logo"
             />

@@ -11,7 +11,7 @@
   width: 100%;
   min-height: 520px;
   display: flex;
-  align-items: center;
+  align-items: end;
   justify-content: flex-start;
   padding: 60px 28px;
   overflow: hidden;
@@ -237,7 +237,7 @@
 
 @media (max-width: 640px) {
   .hero-banner {
-    min-height: 420px;
+    min-height: calc(100vh - 68px);
     padding: 32px 16px;
     align-items: end;
   }
@@ -277,5 +277,21 @@
 
   .trust-card {
     padding: 8px 0;
+  }
+}
+
+.mobile-only {
+  display: block;
+}
+.desktop-only {
+  display: none;
+}
+
+@media (min-width: 580px) {
+  .mobile-only {
+    display: none;
+  }
+  .desktop-only {
+    display: block;
   }
 }

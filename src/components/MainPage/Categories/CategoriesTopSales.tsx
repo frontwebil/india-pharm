@@ -6,6 +6,7 @@ import { FaArrowRight } from "react-icons/fa6";
 import "./style.css";
 import { useEffect, useState } from "react";
 import { Product } from "@/generated/prisma/browser";
+import { ProductCard } from "@/components/CatalogPage/ProductCard/ProductCard";
 
 export function CategoriesTopSales() {
   const [productsBestSeller, setProductsBestSeller] = useState<Product[]>([]);
@@ -42,43 +43,7 @@ export function CategoriesTopSales() {
 
         <div className="top-products-grid">
           {productsBestSeller.map((product) => (
-            <Link key={product.id} href="/catalog" className="top-product-card">
-              {product.isTop && (
-                <span className="cat-price-badge">Хіт продажу</span>
-              )}
-              <div className="">
-                <div className="top-product-image-wrapper">
-                  <Image
-                    src={(product.images as string[])?.[0]}
-                    alt={product.name}
-                    width={200}
-                    height={160}
-                    className="top-product-image"
-                  />
-                </div>
-
-                <div className="top-product-info">
-                  <span className="top-product-category">
-                    {product.category}
-                  </span>
-
-                  <h3 className="top-product-title">{product.name}</h3>
-                </div>
-              </div>
-              <div className="top-product-bottom">
-                <span className="top-product-price">
-                  Від{" "}
-                  {product.minPricePerPill
-                    ? `${Number(product.minPricePerPill)} грн`
-                    : `${Number(product.price)} грн`}{" "}
-                  за таблетку
-                </span>
-
-                <span className="top-product-arrow">
-                  <FaArrowRight />
-                </span>
-              </div>
-            </Link>
+            <ProductCard product={product} key={product.id} />
           ))}
         </div>
       </div>
