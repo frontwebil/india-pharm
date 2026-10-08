@@ -43,6 +43,9 @@ export function CategoriesTopSales() {
         <div className="top-products-grid">
           {productsBestSeller.map((product) => (
             <Link key={product.id} href="/catalog" className="top-product-card">
+              {product.isTop && (
+                <span className="cat-price-badge">Хіт продажу</span>
+              )}
               <div className="">
                 <div className="top-product-image-wrapper">
                   <Image

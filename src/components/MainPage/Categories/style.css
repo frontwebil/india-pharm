@@ -188,6 +188,7 @@
 }
 
 .top-product-card {
+  position: relative;
   justify-content: space-between;
   display: flex;
   flex-direction: column;
