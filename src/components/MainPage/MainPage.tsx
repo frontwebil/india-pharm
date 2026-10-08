@@ -92,9 +92,9 @@ export default function MainPage() {
             {queryId ?? "Немає даних"}
           </p>
         </div>
-      </section> */}
+      </section>
 
-      {/* <section className="mt-4 flex-1">
+      <section className="mt-4 flex-1">
         {loading && <p>Завантаження товарів...</p>}
 
         {!loading && (
@@ -105,7 +105,6 @@ export default function MainPage() {
       </section>
       <CategoriesTopSales />
       <Categories />
-
     </main>
   );
 }
