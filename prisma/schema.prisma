@@ -1,0 +1,71 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id      Int    @id @default(autoincrement())
+  
+  name String
+  userName String
+
+  user_id BigInt
+
+
+   @@unique([user_id])
+}
+
+model Product {
+  id Int @id
+
+  name     String
+  category String?
+
+  currency String @default("UAH")
+
+  price           Decimal  @db.Decimal(10, 2)
+  minPricePerPill Decimal? @db.Decimal(10, 2)
+
+  rating       Float?
+  reviewsCount Int @default(0)
+
+  inProduction Boolean @default(false)
+  isSale       Boolean @default(false)
+  isTop        Boolean @default(false)
+
+  url String?
+
+  description      String?
+  shortDescription String?
+
+  advantages       String?
+  contraindications String?
+  indications      String?
+  overdose         String?
+  sideEffects      String?
+  storage          String?
+  usage            String?
+
+  characteristics Json?
+  images           Json?
+  reviews          Json?
+  variants         Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([category])
+  @@index([isSale])
+  @@index([isTop])
+  @@index([inProduction])
+  @@index([name])
+}

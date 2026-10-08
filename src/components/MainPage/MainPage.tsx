@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Header } from "./Header/Header";
 import { Hero } from "./Hero/Hero";
 import { Categories } from "./Categories/Categories";
+import { CategoriesTopSales } from "./Categories/CategoriesTopSales";
 
 interface Product {
   id: string;
@@ -63,6 +64,7 @@ export default function MainPage() {
       <Header />
       <Hero />
       <Categories />
+      <CategoriesTopSales />
 
       {/* <section className="rounded-xl border border-neutral-800 p-4">
         <h2 className="mb-4 text-lg font-semibold">Telegram User</h2>
