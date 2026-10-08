@@ -239,6 +239,7 @@
   .hero-banner {
     min-height: 420px;
     padding: 32px 16px;
+    align-items: end;
   }
 
   .hero-banner-overlay {
