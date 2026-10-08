@@ -63,8 +63,8 @@ export default function MainPage() {
     <main className="min-h-screenbg-white">
       <Header />
       <Hero />
-      <Categories />
       <CategoriesTopSales />
+      <Categories />
 
       {/* <section className="rounded-xl border border-neutral-800 p-4">
         <h2 className="mb-4 text-lg font-semibold">Telegram User</h2>
