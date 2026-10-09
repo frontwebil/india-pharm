@@ -44,41 +44,47 @@ export async function POST() {
 
         log("[СИНХРОНІЗАЦІЯ] Підготовка товарів...");
 
-        const products = data.products.map((product: Product) => ({
-          id: product.id,
-          name: product.name,
-          category: product.category ?? null,
+        const products = data.products
+          .filter((product: Product) => product.inProduction !== false)
+          .map((product: Product) => ({
+            id: product.id,
+            name: product.name,
+            category:
+              /Жіночий|Жіноча/i.test(product.name) ||
+              /Жіноча віагра/i.test(product.category ?? "")
+                ? "Жіночі збуджувачі"
+                : (product.category ?? null),
 
-          currency: product.currency ?? "UAH",
+            currency: product.currency ?? "UAH",
 
-          price: product.price ?? 0,
-          minPricePerPill: product.minPricePerPill ?? null,
+            price: product.price ?? 0,
+            minPricePerPill: product.minPricePerPill ?? null,
 
-          rating: product.rating ?? null,
-          reviewsCount: product.reviewsCount ?? 0,
+            rating: product.rating ?? null,
+            reviewsCount: product.reviewsCount ?? 0,
 
-          inProduction: product.inProduction ?? false,
-          isSale: product.isSale ?? false,
-          isTop: product.isTop ?? false,
+            inProduction: product.inProduction ?? false,
+            isSale: product.isSale ?? false,
+            isTop: product.isTop ?? false,
 
-          url: product.url ?? null,
+            url: product.url ?? null,
 
-          description: product.description ?? null,
-          shortDescription: product.shortDescription ?? null,
+            description: product.description ?? null,
+            shortDescription: product.shortDescription ?? null,
 
-          advantages: product.advantages ?? null,
-          contraindications: product.contraindications ?? null,
-          indications: product.indications ?? null,
-          overdose: product.overdose ?? null,
-          sideEffects: product.sideEffects ?? null,
-          storage: product.storage ?? null,
-          usage: product.usage ?? null,
+            advantages: product.advantages ?? null,
+            contraindications: product.contraindications ?? null,
+            indications: product.indications ?? null,
+            overdose: product.overdose ?? null,
+            sideEffects: product.sideEffects ?? null,
+            storage: product.storage ?? null,
+            usage: product.usage ?? null,
 
-          characteristics: product.characteristics ?? null,
-          images: product.images ?? null,
-          reviews: product.reviews ?? null,
-          variants: product.variants ?? null,
-        }));
+            characteristics: product.characteristics ?? null,
+            images: product.images ?? null,
+            reviews: product.reviews ?? null,
+            variants: product.variants ?? null,
+          }));
 
         log("[СИНХРОНІЗАЦІЯ] Товари підготовлено");
 

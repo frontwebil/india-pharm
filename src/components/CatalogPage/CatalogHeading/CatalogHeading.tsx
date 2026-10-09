@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { IoOptionsOutline } from "react-icons/io5";
 
 type CatalogHeadingProps = {
@@ -8,15 +9,25 @@ type CatalogHeadingProps = {
 
 export function CatalogHeading({ onOpenFilters }: CatalogHeadingProps) {
   return (
-    <div className="catalog-page-heading">
-      <div>
-        <h1 className="catalog-page-title">Каталог товарів</h1>
+    <section className="catalog-page-heading">
+      <div className="catalog-heading-banner">
+        <Image
+          src="/catalog-banner.webp"
+          alt=""
+          fill
+          priority
+          sizes="(max-width: 768px) 100vw, 1280px"
+          className="catalog-heading-image"
+        />
+        <div className="catalog-heading-overlay" />
+        <div className="catalog-heading-content">
+          <h1 className="catalog-page-title">Каталог товарів</h1>
 
-        <p className="catalog-page-description">
-          Оберіть потрібну категорію та перегляньте доступні товари.
-        </p>
+          <div className="catalog-heading-delivery">
+            <span>Безкоштовна доставка від 1000 грн</span>
+          </div>
+        </div>
       </div>
-
       <button
         type="button"
         className="catalog-filter-toggle"
@@ -25,6 +36,6 @@ export function CatalogHeading({ onOpenFilters }: CatalogHeadingProps) {
         <IoOptionsOutline />
         Категорії
       </button>
-    </div>
+    </section>
   );
 }

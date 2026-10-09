@@ -32,13 +32,15 @@ export function CatalogResults({
   return (
     <section className="catalog-results">
       <div className="catalog-results-header">
-        <h2>Усі товари</h2>
+        <div className="flex items-center gap-2.5">
+          <h2>Усі товари</h2>
 
-        {!isLoading && !error && (
-          <span className="catalog-results-count">
-            {products.length} товарів
-          </span>
-        )}
+          {!isLoading && !error && (
+            <span className="catalog-results-count">
+              {products.length} товарів
+            </span>
+          )}
+        </div>
       </div>
 
       {isLoading ? (

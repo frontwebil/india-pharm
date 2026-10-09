@@ -4,17 +4,20 @@ import Link from "next/link";
 import { IoCloseOutline } from "react-icons/io5";
 
 import { categories } from "../categories";
+import { Product } from "@/generated/prisma/client";
 
 type CatalogSidebarProps = {
   isOpen: boolean;
   productsCount: number;
   onClose: () => void;
+  products: Product[];
 };
 
 export function CatalogSidebar({
   isOpen,
   productsCount,
   onClose,
+  products,
 }: CatalogSidebarProps) {
   return (
     <>

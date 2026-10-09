@@ -7,41 +7,7 @@ import "./style.css";
 import Link from "next/link";
 import { IoIosArrowDown } from "react-icons/io";
 import { FaArrowRight } from "react-icons/fa";
-
-const categories = [
-  {
-    title: "Чоловіче здоров'я",
-    items: [
-      ["Віагра", "/catalog/viagra"],
-      ["Сіаліс", "/catalog/cialis"],
-      ["Дапоксетин", "/catalog/dapoxetine"],
-      ["Левітра", "/catalog/levitra"],
-      ["Камагра", "/catalog/kamagra"],
-      ["Вімакс", "/catalog/vimax"],
-      ["Силденафіл", "/catalog/sildenafil"],
-      ["Тадалафіл", "/catalog/tadalafil"],
-      ["Варденафіл", "/catalog/vardenafil"],
-      ["Аванафіл", "/catalog/avanafil"],
-      ["Продовження сексу", "/catalog/prolongatory"],
-    ],
-  },
-  {
-    title: "Жіноче здоров'я",
-    items: [
-      ["Жіноча Віагра", "/catalog/woman-viagra"],
-      ["Жіночі збудники", "/catalog/zhenskie-vozbuditeli"],
-    ],
-  },
-  {
-    title: "Інше",
-    items: [
-      ["Похудіння", "/catalog/preparaty-dlja-pohudenija"],
-      ["БАДи", "/catalog/bady"],
-      ["Від куріння", "/catalog/ot-kurenija"],
-      ["Лубриканти", "/catalog/lubrikanty"],
-    ],
-  },
-];
+import { categories } from "@/components/CatalogPage/categories";
 
 export function Header() {
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);

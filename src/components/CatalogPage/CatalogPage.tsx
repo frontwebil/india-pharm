@@ -68,6 +68,7 @@ export function CatalogPage() {
               isOpen={isFilterOpen}
               productsCount={products.length}
               onClose={() => setIsFilterOpen(false)}
+              products={products}
             />
 
             <CatalogResults

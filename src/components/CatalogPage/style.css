@@ -522,3 +522,151 @@
     min-width: 12px;
   }
 }
+
+.catalog-page-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.catalog-heading-banner {
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 20px;
+  background: #17251e;
+
+  aspect-ratio: 31 / 8;
+  min-height: unset;
+}
+
+.catalog-heading-image {
+  z-index: 0;
+  object-fit: cover;
+  object-position: center 40%;
+}
+
+.catalog-heading-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    90deg,
+    rgba(36, 46, 77, 0.88) 0%,
+    rgba(21, 44, 112, 0.65) 42%,
+    rgba(0, 35, 141, 0.281) 100%
+  );
+}
+
+.catalog-heading-content {
+  position: relative;
+  z-index: 2;
+  padding: 36px 42px;
+  max-width: 650px;
+}
+
+.catalog-page-title {
+  margin: 0 0 22px;
+  color: #fff;
+  font-family: var(--font-montserrat), sans-serif;
+  font-size: clamp(30px, 4vw, 46px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -1.2px;
+}
+
+.catalog-heading-delivery {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 15px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.13);
+  color: #fff;
+  font-family: var(--font-montserrat), sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  backdrop-filter: blur(8px);
+}
+
+.catalog-heading-delivery svg {
+  flex-shrink: 0;
+  font-size: 20px;
+  color: #b8e6c5;
+}
+
+@media (max-width: 768px) {
+  .catalog-page-heading {
+    gap: 14px;
+    margin-bottom: 22px;
+  }
+
+  .catalog-heading-banner {
+    aspect-ratio: 31 / 14;
+    min-height: unset;
+  }
+
+  .catalog-heading-image {
+    object-position: 62% center;
+  }
+
+  /* .catalog-heading-overlay {
+    background: linear-gradient(
+      90deg,
+      rgba(13, 29, 22, 0.82) 0%,
+      rgba(13, 29, 22, 0.52) 65%,
+      rgba(13, 29, 22, 0.2) 100%
+    );
+  } */
+
+  .catalog-heading-content {
+    padding: 25px 20px;
+  }
+
+  .catalog-page-title {
+    margin-bottom: 16px;
+    font-size: 29px;
+    letter-spacing: -0.7px;
+  }
+
+  .catalog-heading-delivery {
+    gap: 7px;
+    padding: 9px 10px;
+    font-size: 11px;
+  }
+
+  .catalog-heading-delivery svg {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 420px) {
+  .catalog-page{
+    padding: 10px 0 44px;
+  }
+  .catalog-page-title {
+    font-size: 26px;
+    margin-bottom: 6px;
+  }
+  .catalog-heading-delivery {
+    padding: 6px;
+    font-size: 10px;
+  }
+}
+@media (max-width: 380px) {
+  .catalog-heading-content {
+    padding: 20px 14px;
+  }
+
+  .catalog-page-title {
+    font-size: 25px;
+  }
+
+  .catalog-heading-delivery {
+    font-size: 10px;
+  }
+}

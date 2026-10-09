@@ -11,7 +11,7 @@ interface ProductCardProps {
   showBadge?: boolean;
 }
 
-export function ProductCard({ product}: ProductCardProps) {
+export function ProductCard({ product }: ProductCardProps) {
   const images = Array.isArray(product.images) ? product.images : [];
 
   const image = images.find((item): item is string => typeof item === "string");
@@ -43,7 +43,11 @@ export function ProductCard({ product}: ProductCardProps) {
         </div>
       </div>
       <div className="top-product-bottom">
-        <span className="top-product-price">Від {price} грн за таблетку</span>
+        <span className="top-product-price">
+          {product.minPricePerPill
+            ? `Від ${product.minPricePerPill} грн`
+            : `Від ${product.price} грн`}
+        </span>
 
         <span className="top-product-arrow">
           <FaArrowRight />
