@@ -156,7 +156,7 @@
 .catalog-sidebar-all {
   display: flex;
   align-items: center;
-  padding: 8px 10px 8px;
+  padding: 8px 10px;
   border-radius: 7px;
   color: #526078;
   font-size: 12px;
@@ -173,9 +173,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  min-height: 43px;
+  padding: 8px 10px;
   margin-bottom: 22px;
-  padding: 0 12px;
   border: 1px solid #162866;
   border-radius: 8px;
   background: #162866;
@@ -479,6 +478,10 @@
 /* MOBILE */
 
 @media (max-width: 768px) {
+  .catalog-sidebar {
+    max-height: calc(100vh);
+  }
+
   .catalog-page {
     padding: 28px 0 44px;
   }
