@@ -4,7 +4,12 @@ import Link from "next/link";
 
 import { IoCloseOutline } from "react-icons/io5";
 
+import { CatalogFilters } from "../CatalogFilters/CatalogFilters";
 import { categories } from "../categories";
+import {
+  FilterFacet,
+  SelectedFilters,
+} from "../characteristicFilters";
 
 import { Product } from "@/generated/prisma/client";
 
@@ -14,13 +19,20 @@ type CatalogSidebarProps = {
   onClose: () => void;
   products: Product[];
   category?: string;
+  facets?: FilterFacet[];
+  selectedFilters?: SelectedFilters;
+  onToggleFilter?: (key: string, value: string) => void;
+  onResetFilters?: () => void;
 };
 
 export function CatalogSidebar({
   isOpen,
-  productsCount,
   onClose,
   category,
+  facets = [],
+  selectedFilters = {},
+  onToggleFilter,
+  onResetFilters,
 }: CatalogSidebarProps) {
   return (
     <>
@@ -78,6 +90,15 @@ export function CatalogSidebar({
             </div>
           ))}
         </nav>
+
+        {category && onToggleFilter && onResetFilters && (
+          <CatalogFilters
+            facets={facets}
+            selectedFilters={selectedFilters}
+            onToggle={onToggleFilter}
+            onReset={onResetFilters}
+          />
+        )}
       </aside>
     </>
   );

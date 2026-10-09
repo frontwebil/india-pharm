@@ -60,7 +60,7 @@ export function CatalogResults({
       ) : error ? (
         <div className="catalog-state catalog-state-error">{error}</div>
       ) : products.length === 0 ? (
-        <div className="catalog-state">Товарів поки немає.</div>
+        <div className="catalog-state">Товарів не знайдено.</div>
       ) : (
         <>
           <CatalogProducts products={paginatedProducts} />

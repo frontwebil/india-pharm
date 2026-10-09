@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { useProductsStore } from "@/store/productsStore";
 
@@ -10,6 +10,12 @@ import { Header } from "@/components/MainPage/Header/Header";
 import { CatalogResults } from "../CatalogResults/CatalogResults";
 import { CatalogSidebar } from "../CatalogSidebar/CatalogSidebar";
 import { categoryNames } from "../categories";
+import {
+  SelectedFilters,
+  buildFilterFacets,
+  productMatchesFilters,
+  toggleFilterValue,
+} from "../characteristicFilters";
 
 type SortOption = "default" | "price-asc" | "price-desc";
 
@@ -22,6 +28,7 @@ export function CategoryPage({ category }: { category: string }) {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortOption, setSortOption] = useState<SortOption>("default");
+  const [selectedFilters, setSelectedFilters] = useState<SelectedFilters>({});
 
   const PRODUCTS_PER_PAGE = 36;
 
@@ -31,9 +38,28 @@ export function CategoryPage({ category }: { category: string }) {
     return minPrice > 0 ? minPrice : Number(product.price ?? 0);
   };
 
-  const sortedProducts = [...products]
-    .filter((product) => product.category === categoryNames[category])
-    .sort((a, b) => Number(b.isTop) - Number(a.isTop));
+  const categoryProducts = useMemo(
+    () =>
+      products.filter((product) => product.category === categoryNames[category]),
+    [products, category],
+  );
+
+  const facets = useMemo(
+    () => buildFilterFacets(categoryProducts),
+    [categoryProducts],
+  );
+
+  const filteredProducts = useMemo(
+    () =>
+      categoryProducts.filter((product) =>
+        productMatchesFilters(product, selectedFilters),
+      ),
+    [categoryProducts, selectedFilters],
+  );
+
+  const sortedProducts = [...filteredProducts].sort(
+    (a, b) => Number(b.isTop) - Number(a.isTop),
+  );
 
   if (sortOption === "price-asc") {
     sortedProducts.sort((a, b) => getProductPrice(a) - getProductPrice(b));
@@ -61,7 +87,11 @@ export function CategoryPage({ category }: { category: string }) {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [sortOption, category]);
+  }, [sortOption, category, selectedFilters]);
+
+  useEffect(() => {
+    setSelectedFilters({});
+  }, [category]);
 
   return (
     <>
@@ -81,6 +111,14 @@ export function CategoryPage({ category }: { category: string }) {
               onClose={() => setIsFilterOpen(false)}
               products={products}
               category={category}
+              facets={facets}
+              selectedFilters={selectedFilters}
+              onToggleFilter={(key, value) =>
+                setSelectedFilters((current) =>
+                  toggleFilterValue(current, key, value),
+                )
+              }
+              onResetFilters={() => setSelectedFilters({})}
             />
 
             <CatalogResults

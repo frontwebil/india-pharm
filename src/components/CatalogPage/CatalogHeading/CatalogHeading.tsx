@@ -44,7 +44,7 @@ export function CatalogHeading({
           onClick={onOpenFilters}
         >
           <IoOptionsOutline />
-          Категорії
+          Категорії / Фільтри
         </button>
         <div className="catalog-sort-mobile">
           <CatalogSort sortOption={sortOption} setSortOption={setSortOption} />
