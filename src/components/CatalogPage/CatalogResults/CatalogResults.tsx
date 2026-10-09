@@ -17,7 +17,7 @@ type CatalogResultsProps = {
   onPageChange: (page: number) => void;
   sortOption: string;
   setSortOption: (SortOption: SortOption) => void;
-  category: string;
+  category?: string;
 };
 
 export function CatalogResults({
