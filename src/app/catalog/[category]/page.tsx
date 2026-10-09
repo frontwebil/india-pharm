@@ -1,4 +1,5 @@
 import { CategoryPage } from "@/components/CatalogPage/CategoryPage/CategoryPage";
+import { Suspense } from "react";
 
 type PageProps = {
   params: Promise<{
@@ -9,5 +10,9 @@ type PageProps = {
 export default async function Page({ params }: PageProps) {
   const { category } = await params;
 
-  return <div><CategoryPage category={category}/></div>;
+  return (
+    <Suspense>
+      <CategoryPage category={category} />
+    </Suspense>
+  );
 }
