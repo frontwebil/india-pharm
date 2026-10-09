@@ -2,12 +2,21 @@
 
 import Image from "next/image";
 import { IoOptionsOutline } from "react-icons/io5";
+import { CatalogSort } from "../CatalogSort/CatalogSort";
+
+type SortOption = "default" | "price-asc" | "price-desc";
 
 type CatalogHeadingProps = {
   onOpenFilters: () => void;
+  sortOption: string;
+  setSortOption: (SortOption: SortOption) => void;
 };
 
-export function CatalogHeading({ onOpenFilters }: CatalogHeadingProps) {
+export function CatalogHeading({
+  onOpenFilters,
+  sortOption,
+  setSortOption,
+}: CatalogHeadingProps) {
   return (
     <section className="catalog-page-heading">
       <div className="catalog-heading-banner">
@@ -28,14 +37,19 @@ export function CatalogHeading({ onOpenFilters }: CatalogHeadingProps) {
           </div>
         </div>
       </div>
-      <button
-        type="button"
-        className="catalog-filter-toggle"
-        onClick={onOpenFilters}
-      >
-        <IoOptionsOutline />
-        Категорії
-      </button>
+      <div className="buttons-flex">
+        <button
+          type="button"
+          className="catalog-filter-toggle"
+          onClick={onOpenFilters}
+        >
+          <IoOptionsOutline />
+          Категорії
+        </button>
+        <div className="catalog-sort-mobile">
+          <CatalogSort sortOption={sortOption} setSortOption={setSortOption} />
+        </div>
+      </div>
     </section>
   );
 }

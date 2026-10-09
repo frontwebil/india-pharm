@@ -4,16 +4,16 @@ import { useEffect, useState } from "react";
 
 import { useProductsStore } from "@/store/productsStore";
 
-import "./style.css";
-
-import { Header } from "../MainPage/Header/Header";
-import { CatalogHeading } from "./CatalogHeading/CatalogHeading";
-import { CatalogSidebar } from "./CatalogSidebar/CatalogSidebar";
-import { CatalogResults } from "./CatalogResults/CatalogResults";
+import "../style.css";
+import { CatalogHeading } from "../CatalogHeading/CatalogHeading";
+import { Header } from "@/components/MainPage/Header/Header";
+import { CatalogResults } from "../CatalogResults/CatalogResults";
+import { CatalogSidebar } from "../CatalogSidebar/CatalogSidebar";
+import { categoryNames } from "../categories";
 
 type SortOption = "default" | "price-asc" | "price-desc";
 
-export function CatalogPage() {
+export function CategoryPage({ category }: { category: string }) {
   const products = useProductsStore((state) => state.products);
   const isLoading = useProductsStore((state) => state.isLoading);
   const error = useProductsStore((state) => state.error);
@@ -25,23 +25,23 @@ export function CatalogPage() {
 
   const PRODUCTS_PER_PAGE = 36;
 
-  const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
-
   const getProductPrice = (product: (typeof products)[number]) => {
     const minPrice = Number(product.minPricePerPill ?? 0);
 
     return minPrice > 0 ? minPrice : Number(product.price ?? 0);
   };
 
-  const sortedProducts = [...products].sort(
-    (a, b) => Number(b.isTop) - Number(a.isTop),
-  );
+  const sortedProducts = [...products]
+    .filter((product) => product.category === categoryNames[category])
+    .sort((a, b) => Number(b.isTop) - Number(a.isTop));
 
   if (sortOption === "price-asc") {
     sortedProducts.sort((a, b) => getProductPrice(a) - getProductPrice(b));
   } else if (sortOption === "price-desc") {
     sortedProducts.sort((a, b) => getProductPrice(b) - getProductPrice(a));
   }
+
+  const totalPages = Math.ceil(sortedProducts.length / PRODUCTS_PER_PAGE);
 
   useEffect(() => {
     loadProducts();
@@ -61,7 +61,7 @@ export function CatalogPage() {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [sortOption]);
+  }, [sortOption, category]);
 
   return (
     <>
@@ -80,9 +80,11 @@ export function CatalogPage() {
               productsCount={products.length}
               onClose={() => setIsFilterOpen(false)}
               products={products}
+              category={category}
             />
 
             <CatalogResults
+              category={category}
               products={sortedProducts}
               isLoading={isLoading}
               error={error}

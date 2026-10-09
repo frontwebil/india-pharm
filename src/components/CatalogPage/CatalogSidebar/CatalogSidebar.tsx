@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
+
 import { IoCloseOutline } from "react-icons/io5";
 
 import { categories } from "../categories";
+
 import { Product } from "@/generated/prisma/client";
 
 type CatalogSidebarProps = {
@@ -11,13 +13,14 @@ type CatalogSidebarProps = {
   productsCount: number;
   onClose: () => void;
   products: Product[];
+  category?: string;
 };
 
 export function CatalogSidebar({
   isOpen,
   productsCount,
   onClose,
-  products,
+  category,
 }: CatalogSidebarProps) {
   return (
     <>
@@ -46,19 +49,28 @@ export function CatalogSidebar({
           </button>
         </div>
 
-        <Link href="/catalog" className="catalog-sidebar-all" onClick={onClose}>
+        <Link
+          href="/catalog"
+          className={`catalog-sidebar-all ${!category ? "active" : ""}`}
+          onClick={onClose}
+        >
           Усі товари
-          {productsCount > 0 && <span>{productsCount}</span>}
+          {/* {productsCount > 0 && <span>{productsCount}</span>} */}
         </Link>
 
         <nav className="catalog-sidebar-nav">
-          {categories.map((category) => (
-            <div className="catalog-sidebar-group" key={category.title}>
-              <h3>{category.title}</h3>
+          {categories.map((categoryGroup) => (
+            <div className="catalog-sidebar-group" key={categoryGroup.title}>
+              <h3>{categoryGroup.title}</h3>
 
               <div className="catalog-sidebar-links">
-                {category.items.map(([title, slug]) => (
-                  <Link href={`/catalog/${slug}`} key={slug} onClick={onClose}>
+                {categoryGroup.items.map(([title, slug]) => (
+                  <Link
+                    className={slug === category ? "active" : ""}
+                    href={`/catalog/${slug}`}
+                    key={slug}
+                    onClick={onClose}
+                  >
                     {title}
                   </Link>
                 ))}

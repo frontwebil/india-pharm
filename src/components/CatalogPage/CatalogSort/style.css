@@ -1,0 +1,52 @@
+.catalog-sort {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  font-family: var(--font-montserrat), sans-serif;
+}
+
+.catalog-sort label {
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.catalog-sort select {
+  min-width: 220px;
+  padding: 11px 36px 11px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #fff;
+  color: #0f1730;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.catalog-sort select:hover,
+.catalog-sort select:focus {
+  border-color: #5b55f7;
+}
+
+@media (max-width: 600px) {
+  .catalog-sort {
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .catalog-sort select {
+    min-width: 0;
+    max-width: 70%;
+    flex: 1;
+  }
+}
+@media (max-width: 768px) {
+  .catalog-sort select{
+    min-width: 150px;
+    padding: 10px 20px 10px 10px;
+    font-size: 10px;
+  }
+}

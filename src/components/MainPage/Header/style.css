@@ -255,13 +255,13 @@
   letter-spacing: 0.07em;
 
   margin-bottom: 20px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #e3e8ef;
-  transition: color 0.3s ease;
+  border-bottom: 1px solid transparent;
+  transition: all 0.3s ease;
 }
 
 .catalog-category-all:hover {
   color: #203a82;
+  border-bottom: 1px solid #203a82;
 }
 
 /* CATEGORIES */

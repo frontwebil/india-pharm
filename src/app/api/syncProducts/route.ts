@@ -45,7 +45,15 @@ export async function POST() {
         log("[СИНХРОНІЗАЦІЯ] Підготовка товарів...");
 
         const products = data.products
-          .filter((product: Product) => product.inProduction !== false)
+          .filter((product: Product) => {
+            const price = Number(product.price ?? 0);
+            const minPricePerPill = Number(product.minPricePerPill ?? 0);
+
+            return (
+              product.inProduction !== false &&
+              !(price === 0 && minPricePerPill === 0)
+            );
+          })
           .map((product: Product) => ({
             id: product.id,
             name: product.name,

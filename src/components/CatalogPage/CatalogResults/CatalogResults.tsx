@@ -2,6 +2,10 @@ import { Product } from "@/generated/prisma/browser";
 
 import { CatalogProducts } from "../CatalogProducts/CatalogProducts";
 import { CatalogPagination } from "../CatalogPagination/CatalogPagination";
+import { CatalogSort } from "../CatalogSort/CatalogSort";
+import { categoryNames } from "../categories";
+
+type SortOption = "default" | "price-asc" | "price-desc";
 
 type CatalogResultsProps = {
   products: Product[];
@@ -11,6 +15,9 @@ type CatalogResultsProps = {
   totalPages: number;
   productsPerPage: number;
   onPageChange: (page: number) => void;
+  sortOption: string;
+  setSortOption: (SortOption: SortOption) => void;
+  category: string;
 };
 
 export function CatalogResults({
@@ -21,9 +28,11 @@ export function CatalogResults({
   totalPages,
   productsPerPage,
   onPageChange,
+  setSortOption,
+  category,
+  sortOption,
 }: CatalogResultsProps) {
   const startIndex = (currentPage - 1) * productsPerPage;
-
   const paginatedProducts = products.slice(
     startIndex,
     startIndex + productsPerPage,
@@ -33,13 +42,16 @@ export function CatalogResults({
     <section className="catalog-results">
       <div className="catalog-results-header">
         <div className="flex items-center gap-2.5">
-          <h2>Усі товари</h2>
+          <h2>{!category ? "Усі товари" : categoryNames[category]}</h2>
 
           {!isLoading && !error && (
             <span className="catalog-results-count">
               {products.length} товарів
             </span>
           )}
+        </div>
+        <div className="catalog-results-header-pc">
+          <CatalogSort sortOption={sortOption} setSortOption={setSortOption} />
         </div>
       </div>
 
