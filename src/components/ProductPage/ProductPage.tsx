@@ -2,9 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { FiChevronDown, FiRefreshCw, FiShoppingCart } from "react-icons/fi";
 import { useProductsStore } from "@/store/productsStore";
+import { useCartStore } from "@/store/cartStore";
 import { Header } from "../MainPage/Header/Header";
 import "./style.css";
 import { categoryNames } from "../CatalogPage/categories";
@@ -29,6 +30,11 @@ type ProductReview = {
   text?: string;
   author?: string;
   rating?: number;
+};
+
+type CartToast = {
+  message: string;
+  tone: "success" | "error";
 };
 
 function asRecord(value: unknown): JsonRecord {
@@ -72,10 +78,13 @@ export function ProductPage({ id }: { id: string }) {
   const isLoading = useProductsStore((state) => state.isLoading);
   const error = useProductsStore((state) => state.error);
   const loadProducts = useProductsStore((state) => state.loadProducts);
+  const addCartItem = useCartStore((state) => state.addItem);
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedVariant, setSelectedVariant] = useState(0);
   const [openSections, setOpenSections] = useState<string[]>(["description"]);
   const [hasLoaded, setHasLoaded] = useState(false);
+  const [cartToast, setCartToast] = useState<CartToast | null>(null);
+  const cartToastTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     let isCurrent = true;
@@ -88,6 +97,19 @@ export function ProductPage({ id }: { id: string }) {
       isCurrent = false;
     };
   }, [loadProducts]);
+
+  useEffect(
+    () => () => {
+      if (cartToastTimeout.current) clearTimeout(cartToastTimeout.current);
+    },
+    [],
+  );
+
+  function showCartToast(toast: CartToast) {
+    if (cartToastTimeout.current) clearTimeout(cartToastTimeout.current);
+    setCartToast(toast);
+    cartToastTimeout.current = setTimeout(() => setCartToast(null), 2800);
+  }
 
   const product = products.find((item) => String(item.id) === id);
 
@@ -168,6 +190,11 @@ export function ProductPage({ id }: { id: string }) {
 
   const activeVariant = variants[selectedVariant];
   const activePrice = activeVariant?.price ?? product?.price;
+  const activeVariantKey = activeVariant
+    ? activeVariant.id !== undefined
+      ? String(activeVariant.id)
+      : (activeVariant.package ?? null)
+    : null;
 
   function toggleSection(key: string) {
     setOpenSections((current) =>
@@ -177,14 +204,24 @@ export function ProductPage({ id }: { id: string }) {
     );
   }
 
-  let key = "";
-  if (product?.category) {
-    key = getCategoryKey(product?.category);
-  }
+  const categoryKey = product?.category
+    ? getCategoryKey(product.category)
+    : undefined;
 
   return (
     <>
       <Header />
+
+      {cartToast && (
+        <div
+          className={`product-cart-toast product-cart-toast-${cartToast.tone}`}
+          role="status"
+          aria-live="polite"
+        >
+          <span aria-hidden="true">{cartToast.tone === "success" ? "✓" : "!"}</span>
+          {cartToast.message}
+        </div>
+      )}
 
       {(!hasLoaded || isLoading) && (
         <div
@@ -210,10 +247,16 @@ export function ProductPage({ id }: { id: string }) {
                 <span aria-hidden="true">/</span>
                 <Link href="/catalog">Каталог</Link>
                 {product.category && (
-                  <Link href={`/catalog/${key}`}>
+                  <>
                     <span aria-hidden="true">/</span>
-                    <span> {product.category}</span>
-                  </Link>
+                    {categoryKey ? (
+                      <Link href={`/catalog/${categoryKey}`}>
+                        {product.category}
+                      </Link>
+                    ) : (
+                      <span>{product.category}</span>
+                    )}
+                  </>
                 )}
               </nav>
 
@@ -351,7 +394,30 @@ export function ProductPage({ id }: { id: string }) {
                         </div>
                       </fieldset>
                     )}
-                    <button type="button" className="product-add-to-cart">
+                    <button
+                      type="button"
+                      className="product-add-to-cart"
+                      onClick={() => {
+                        try {
+                          addCartItem(
+                            product.id,
+                            activeVariantKey,
+                            activeVariant?.package ?? null,
+                          );
+                          showCartToast({
+                            message: "Товар додано до кошика",
+                            tone: "success",
+                          });
+                        } catch (error) {
+                          console.error("Не вдалося додати товар до кошика:", error);
+                          showCartToast({
+                            message:
+                              "Не вдалося зберегти кошик. Спробуйте ще раз.",
+                            tone: "error",
+                          });
+                        }
+                      }}
+                    >
                       <FiShoppingCart aria-hidden="true" />
                       Додати в кошик
                     </button>

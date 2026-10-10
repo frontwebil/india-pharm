@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Script from "next/script";
 import TelegramGuard from "@/components/TelegramGuard/TelegramGuard";
+import { CartOrderButton } from "@/components/Cart/CartOrderButton";
 import { Montserrat } from "next/font/google";
 
 const geistSans = Geist({
@@ -39,6 +40,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           strategy="beforeInteractive"
         />
         <TelegramGuard />
+        <CartOrderButton />
         {children}
       </body>
     </html>
