@@ -53,10 +53,10 @@
 
 @media (max-width: 560px) {
   .catalog-sort select {
-    padding: 10px 20px 10px 10px;
-    font-size: 14px;
+    padding: 10px 15px 10px 10px;
+    font-size: 13px;
   }
-  .catalog-sort label{
+  .catalog-sort label {
     font-size: 14px;
   }
 }
