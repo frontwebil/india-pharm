@@ -8,10 +8,7 @@ import { IoCloseOutline } from "react-icons/io5";
 
 import { CatalogFilters } from "../CatalogFilters/CatalogFilters";
 import { categories } from "../categories";
-import {
-  FilterFacet,
-  SelectedFilters,
-} from "../characteristicFilters";
+import { FilterFacet, SelectedFilters } from "../characteristicFilters";
 
 import { Product } from "@/generated/prisma/client";
 
@@ -95,7 +92,10 @@ export function CatalogSidebar({
 
             <nav className="catalog-sidebar-nav">
               {categories.map((categoryGroup) => (
-                <div className="catalog-sidebar-group" key={categoryGroup.title}>
+                <div
+                  className="catalog-sidebar-group"
+                  key={categoryGroup.title}
+                >
                   <h3>{categoryGroup.title}</h3>
 
                   <div className="catalog-sidebar-links">

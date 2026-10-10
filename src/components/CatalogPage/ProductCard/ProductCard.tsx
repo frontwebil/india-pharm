@@ -21,7 +21,7 @@ export function ProductCard({ product }: ProductCardProps) {
     : Number(product.price);
 
   return (
-    <Link href="/catalog" className="top-product-card">
+    <Link href={`/product/${product.id}`} className="top-product-card">
       {product.isTop && <span className="cat-price-badge">Хіт продажу </span>}
       <div>
         <div className="top-product-image-wrapper">
