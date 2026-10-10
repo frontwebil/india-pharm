@@ -4,8 +4,7 @@ import { create } from "zustand";
 import { createJSONStorage, persist, StateStorage } from "zustand/middleware";
 import { Product } from "@/generated/prisma/browser";
 
-const COOKIE_NAME = "india-pharm-cart";
-const COOKIE_MAX_AGE = 60 * 60 * 24 * 30;
+const STORAGE_NAME = "india-pharm-cart";
 
 export type CartItem = {
   productId: number;
@@ -40,38 +39,44 @@ type ProductVariantRecord = {
   package?: string;
 };
 
-const cookieStorage: StateStorage = {
+const cartStorage: StateStorage = {
   getItem: (name) => {
-    if (typeof document === "undefined") return null;
+    if (typeof window === "undefined") return null;
+
+    const stored = window.localStorage.getItem(name);
+    if (stored !== null) {
+      removeLegacyCookie(name);
+      return stored;
+    }
 
     const prefix = `${encodeURIComponent(name)}=`;
     const entry = document.cookie
       .split("; ")
       .find((cookie) => cookie.startsWith(prefix));
+    if (!entry) return null;
 
-    return entry ? decodeURIComponent(entry.slice(prefix.length)) : null;
+    const legacyValue = decodeURIComponent(entry.slice(prefix.length));
+    window.localStorage.setItem(name, legacyValue);
+    removeLegacyCookie(name);
+    return legacyValue;
   },
   setItem: (name, value) => {
-    if (typeof document === "undefined") return;
+    if (typeof window === "undefined") return;
 
-    const cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}`;
-    if (cookie.length > 3800) {
-      throw new Error("Кошик завеликий для збереження в cookie.");
-    }
-
-    const secure = window.location.protocol === "https:" ? "; Secure" : "";
-    document.cookie = `${cookie}; Max-Age=${COOKIE_MAX_AGE}; Path=/; SameSite=Lax${secure}`;
-
-    if (!document.cookie.split("; ").some((entry) => entry.startsWith(`${encodeURIComponent(name)}=`))) {
-      throw new Error("Не вдалося зберегти кошик у cookie.");
-    }
+    window.localStorage.setItem(name, value);
+    removeLegacyCookie(name);
   },
   removeItem: (name) => {
-    if (typeof document === "undefined") return;
+    if (typeof window === "undefined") return;
 
-    document.cookie = `${encodeURIComponent(name)}=; Max-Age=0; Path=/; SameSite=Lax`;
+    window.localStorage.removeItem(name);
+    removeLegacyCookie(name);
   },
 };
+
+function removeLegacyCookie(name: string) {
+  document.cookie = `${encodeURIComponent(name)}=; Max-Age=0; Path=/; SameSite=Lax`;
+}
 
 function isCartItem(value: unknown): value is CartItem {
   if (!value || typeof value !== "object") return false;
@@ -201,9 +206,9 @@ export const useCartStore = create<CartState>()(
         }),
     }),
     {
-      name: COOKIE_NAME,
+      name: STORAGE_NAME,
       version: 1,
-      storage: createJSONStorage(() => cookieStorage),
+      storage: createJSONStorage(() => cartStorage),
       skipHydration: true,
       partialize: (state) => ({ items: state.items }) as CartState,
       merge: (persisted, current) => {
