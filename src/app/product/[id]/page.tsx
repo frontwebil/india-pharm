@@ -1,5 +1,4 @@
 import { ProductPage } from "@/components/ProductPage/ProductPage";
-import { prisma } from "@/lib/prisma";
 import { Suspense } from "react";
 
 type PageProps = {
@@ -8,24 +7,15 @@ type PageProps = {
 
 function ProductContent({ params }: PageProps) {
   return (
-    <Suspense fallback={""}>
-      {" "}
-      <ProductParams params={params} />{" "}
+    <Suspense fallback={<div />}>
+      <ProductParams params={params} />
     </Suspense>
   );
 }
 
 async function ProductParams({ params }: PageProps) {
   const { id } = await params;
-  const product1 = await prisma.product.findFirst({
-    where: {
-      id: Number(id),
-    },
-  });
-
-  console.log(product1);
-
-  return <ProductPage id={id} />;
+  return <ProductPage key={id} id={id} />;
 }
 
 export default function Page({ params }: PageProps) {
