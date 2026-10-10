@@ -831,8 +831,18 @@
   .buttons-flex {
     display: flex;
     flex-direction: column;
-    align-items: start;
+    align-items: center;
     margin-top: 25px;
+  }
+
+  .catalog-filter-toggle {
+    width: 100%;
+    font-size: 14px;
+  }
+
+  .catalog-sort select {
+    padding: 10px 20px 10px 10px;
+    font-size: 14px;
   }
 }
 

@@ -18,7 +18,10 @@ type CartVariant = {
   price?: number | string;
 };
 
-function getCartVariant(value: unknown, item: CartItem): CartVariant | undefined {
+function getCartVariant(
+  value: unknown,
+  item: CartItem,
+): CartVariant | undefined {
   if (!Array.isArray(value)) return undefined;
 
   return value.find((entry: unknown) => {
@@ -46,10 +49,7 @@ export function Header() {
   const setQuantity = useCartStore((state) => state.setQuantity);
   const removeItem = useCartStore((state) => state.removeItem);
   const products = useProductsStore((state) => state.products);
-  const cartCount = cartItems.reduce(
-    (total, item) => total + item.quantity,
-    0,
-  );
+  const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
   const catalogRef = useRef<HTMLDivElement>(null);
 
   const resolvedCartItems = cartItems.flatMap((item) => {
@@ -336,7 +336,8 @@ export function Header() {
                         <strong>{formatCartPrice(cartTotal)}</strong>
                       </div>
                       <p className="header-cart-order-hint">
-                        Для оформлення натисніть кнопку внизу екрана Telegram.
+                        Для оформлення замовлення натисніть кнопку {"Оформити замовлення"}{" "}
+                        в нижній частині екрану.
                       </p>
                     </>
                   )}
