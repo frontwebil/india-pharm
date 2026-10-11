@@ -581,7 +581,7 @@
   }
 }
 
-@media (max-width: 420px) {
+@media (max-width: 560px) {
   .checkout-fields,
   .checkout-choice-options {
     grid-template-columns: 1fr;

@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import { useTelegram } from "@/hooks/useTelegram";
 import { useCartStore } from "@/store/cartStore";
 import { useProductsStore } from "@/store/productsStore";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export function CartOrderButton() {
+  const pathname = usePathname();
   const router = useRouter();
   const items = useCartStore((state) => state.items);
   const reconcileProducts = useCartStore((state) => state.reconcileProducts);
@@ -54,6 +55,7 @@ export function CartOrderButton() {
 
   useEffect(() => {
     if (!tg) return;
+    if (pathname === "/checkout") return;
 
     const mainButton = tg.MainButton;
 
@@ -65,7 +67,6 @@ export function CartOrderButton() {
       mainButton.hide();
     }
 
-    
     function handleCheckout() {
       router.push("/checkout");
     }

@@ -69,3 +69,18 @@ model Product {
   @@index([inProduction])
   @@index([name])
 }
+
+model Order {
+  id Int @id
+  status String @default("New")
+  name String
+  phone String
+  adress String
+
+  delivery String
+  paymentType String
+
+  prefferContactMethod String
+
+  products Json
+}

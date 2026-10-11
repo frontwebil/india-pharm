@@ -328,13 +328,13 @@ export function CheckoutPage() {
                 </fieldset>
               </section>
 
-              <button className="checkout-submit" type="submit">
+              {/* <button className="checkout-submit" type="submit">
                 Оформити замовлення
               </button>
               <p className="checkout-form-note">
                 Натискання кнопки поки не надсилає дані — оформлення буде
                 підключено пізніше.
-              </p>
+              </p> */}
             </form>
 
             <aside className="checkout-summary">
