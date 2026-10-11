@@ -2,12 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { FiArrowLeft, FiLock, FiPackage } from "react-icons/fi";
 import { useRouter } from "next/navigation";
 import { CartItem, useCartStore } from "@/store/cartStore";
 import { useProductsStore } from "@/store/productsStore";
 import { Header } from "@/components/MainPage/Header/Header";
+import { useTelegram } from "@/hooks/useTelegram";
 import "./style.css";
 
 type CartVariant = {
@@ -16,7 +17,14 @@ type CartVariant = {
   price?: number | string;
 };
 
-function getCartVariant(value: unknown, item: CartItem): CartVariant | undefined {
+type ToastTone = "success" | "error";
+
+type FormErrorState = Partial<Record<"name" | "phone" | "adress", boolean>>;
+
+function getCartVariant(
+  value: unknown,
+  item: CartItem,
+): CartVariant | undefined {
   if (!Array.isArray(value)) return undefined;
 
   return value.find((entry: unknown) => {
@@ -36,12 +44,27 @@ function formatPrice(value: number) {
 
 export function CheckoutPage() {
   const router = useRouter();
+  const { tg, onClose } = useTelegram();
   const cartItems = useCartStore((state) => state.items);
   const reconcileProducts = useCartStore((state) => state.reconcileProducts);
   const products = useProductsStore((state) => state.products);
   const loadProducts = useProductsStore((state) => state.loadProducts);
   const [isReady, setIsReady] = useState(false);
   const [loadError, setLoadError] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<FormErrorState>({});
+  const [toast, setToast] = useState<{
+    message: string;
+    tone: ToastTone;
+  } | null>(null);
+  const formRef = useRef<HTMLFormElement | null>(null);
+
+  useEffect(() => {
+    if (!toast) return;
+
+    const timeout = window.setTimeout(() => setToast(null), 2800);
+    return () => window.clearTimeout(timeout);
+  }, [toast]);
 
   useEffect(() => {
     let isCurrent = true;
@@ -71,7 +94,10 @@ export function CheckoutPage() {
 
         setIsReady(true);
       } catch (error) {
-        console.error("Не вдалося відновити дані для оформлення замовлення:", error);
+        console.error(
+          "Не вдалося відновити дані для оформлення замовлення:",
+          error,
+        );
         if (isCurrent) setLoadError(true);
       }
     }
@@ -108,6 +134,7 @@ export function CheckoutPage() {
           name: product?.name ?? `Товар #${item.productId}`,
           image,
           price: Number.isFinite(price) ? price : 0,
+          selectedVariant: item.packageName || item.variantKey || "Стандарт",
         };
       }),
     [cartItems, products],
@@ -118,9 +145,153 @@ export function CheckoutPage() {
     0,
   );
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (isSubmitting) return;
+    if (orderItems.length === 0) {
+      setToast({
+        message: "Кошик порожній. Додайте товари перед оформленням.",
+        tone: "error",
+      });
+      return;
+    }
+
+    const formData = new FormData(event.currentTarget);
+    const nextErrors: FormErrorState = {};
+
+    const name = String(formData.get("name") ?? "").trim();
+    const phone = String(formData.get("phone") ?? "").trim();
+    const adress = String(
+      formData.get("adress") ?? formData.get("address") ?? "",
+    )
+      .toString()
+      .trim();
+    const delivery = String(formData.get("delivery") ?? "").trim();
+    const paymentType = String(formData.get("payment") ?? "").trim();
+    const prefferContactMethod = String(formData.get("contact") ?? "").trim();
+
+    if (!name) nextErrors.name = true;
+    if (!phone) nextErrors.phone = true;
+    if (!adress) nextErrors.adress = true;
+
+    setFieldErrors(nextErrors);
+
+    if (
+      Object.keys(nextErrors).length > 0 ||
+      !delivery ||
+      !paymentType ||
+      !prefferContactMethod
+    ) {
+      setToast({
+        message:
+          "Заповніть всі обов’язкові поля та виберіть спосіб доставки/оплати.",
+        tone: "error",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    if (tg?.MainButton) {
+      tg.MainButton.disable();
+      tg.MainButton.setText("Відправляємо...");
+    }
+
+    const payload = {
+      status: "New",
+      name,
+      phone,
+      adress,
+      delivery,
+      paymentType,
+      prefferContactMethod,
+      products: orderItems.map((item) => ({
+        productId: item.productId,
+        name: item.name,
+        selectedVariant: item.selectedVariant,
+        quantity: item.quantity,
+        price: Number(item.price.toFixed(2)),
+        totalPrice: Number((item.price * item.quantity).toFixed(2)),
+        packageName: item.packageName ?? null,
+        variantKey: item.variantKey ?? null,
+        image: item.image ?? null,
+      })),
+      total: Number(total.toFixed(2)),
+      currency: "UAH",
+      source: "telegram-mini-app",
+      createdAt: new Date().toISOString(),
+    };
+
+    try {
+      const response = await fetch(
+        "https://jsonplaceholder.typicode.com/posts",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Не вдалося оформити замовлення. Спробуйте ще раз.");
+      }
+
+      setToast({
+        message: "Замовлення успішно відправлено.",
+        tone: "success",
+      });
+
+      await new Promise((resolve) => window.setTimeout(resolve, 800));
+
+      if (typeof window !== "undefined" && window.Telegram?.WebApp) {
+        window.Telegram.WebApp.close();
+      } else {
+        onClose();
+        router.replace("/catalog");
+      }
+    } catch (error) {
+      setToast({
+        message:
+          error instanceof Error
+            ? error.message
+            : "Не вдалося оформити замовлення.",
+        tone: "error",
+      });
+
+      if (tg?.MainButton) {
+        tg.MainButton.enable();
+        tg.MainButton.setText("Оформити замовлення");
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   }
+
+  useEffect(() => {
+    if (!tg) return;
+
+    const mainButton = tg.MainButton;
+    const handleCheckout = () => {
+      formRef.current?.requestSubmit();
+    };
+
+    if (isReady) {
+      mainButton.setText(
+        isSubmitting ? "Відправляємо..." : "Оформити замовлення",
+      );
+      mainButton.show();
+      mainButton.onClick(handleCheckout);
+    } else {
+      mainButton.hide();
+    }
+
+    return () => {
+      mainButton.offClick(handleCheckout);
+    };
+  }, [isReady, isSubmitting, tg]);
 
   if (!isReady && !loadError) {
     return (
@@ -147,17 +318,9 @@ export function CheckoutPage() {
 
           <div className="checkout-heading">
             <div>
-              {/* <span className="checkout-eyebrow">Залишився останній крок</span> */}
               <h1>Оформлення замовлення</h1>
               <p>Заповніть контактні дані та оберіть зручні умови доставки.</p>
             </div>
-            {/* <div className="checkout-step" aria-label="Крок 2 з 2">
-              <span>Крок 2 з 2</span>
-              <div className="checkout-step-track">
-                <span />
-              </div>
-              <small>Дані отримувача</small>
-            </div> */}
           </div>
 
           {loadError && (
@@ -168,7 +331,11 @@ export function CheckoutPage() {
           )}
 
           <div className="checkout-layout">
-            <form className="checkout-form" onSubmit={handleSubmit}>
+            <form
+              className="checkout-form"
+              onSubmit={handleSubmit}
+              ref={formRef}
+            >
               <section className="checkout-section">
                 <div className="checkout-section-heading">
                   <span className="checkout-section-number">01</span>
@@ -179,19 +346,25 @@ export function CheckoutPage() {
                 </div>
 
                 <div className="checkout-fields">
-                  <label className="checkout-field">
+                  <label
+                    className={`checkout-field${fieldErrors.name ? " checkout-field-error" : ""}`}
+                  >
                     <span>Ім’я та прізвище</span>
                     <input
                       autoComplete="name"
+                      aria-invalid={Boolean(fieldErrors.name)}
                       name="name"
                       placeholder="Наприклад, Іван Петренко"
                       required
                     />
                   </label>
-                  <label className="checkout-field">
+                  <label
+                    className={`checkout-field${fieldErrors.phone ? " checkout-field-error" : ""}`}
+                  >
                     <span>Телефон</span>
                     <input
                       autoComplete="tel"
+                      aria-invalid={Boolean(fieldErrors.phone)}
                       inputMode="tel"
                       name="phone"
                       placeholder="+380 __ ___ __ __"
@@ -199,11 +372,14 @@ export function CheckoutPage() {
                       type="tel"
                     />
                   </label>
-                  <label className="checkout-field checkout-field-full">
+                  <label
+                    className={`checkout-field checkout-field-full${fieldErrors.adress ? " checkout-field-error" : ""}`}
+                  >
                     <span>Адреса доставки</span>
                     <textarea
                       autoComplete="street-address"
-                      name="address"
+                      aria-invalid={Boolean(fieldErrors.adress)}
+                      name="adress"
                       placeholder="Місто, номер або адреса відділення"
                       required
                       rows={3}
@@ -239,11 +415,7 @@ export function CheckoutPage() {
                       </span>
                     </label>
                     <label className="checkout-choice">
-                      <input
-                        name="delivery"
-                        type="radio"
-                        value="ukrposhta"
-                      />
+                      <input name="delivery" type="radio" value="ukrposhta" />
                       <span className="checkout-radio-mark" />
                       <span className="checkout-choice-copy">
                         <strong>Укрпошта</strong>
@@ -313,11 +485,7 @@ export function CheckoutPage() {
                       </span>
                     </label>
                     <label className="checkout-choice">
-                      <input
-                        name="contact"
-                        type="radio"
-                        value="phone-call"
-                      />
+                      <input name="contact" type="radio" value="phone-call" />
                       <span className="checkout-radio-mark" />
                       <span className="checkout-choice-copy">
                         <strong>Телефонний дзвінок</strong>
@@ -327,14 +495,6 @@ export function CheckoutPage() {
                   </div>
                 </fieldset>
               </section>
-
-              {/* <button className="checkout-submit" type="submit">
-                Оформити замовлення
-              </button>
-              <p className="checkout-form-note">
-                Натискання кнопки поки не надсилає дані — оформлення буде
-                підключено пізніше.
-              </p> */}
             </form>
 
             <aside className="checkout-summary">
@@ -396,6 +556,17 @@ export function CheckoutPage() {
             </aside>
           </div>
         </div>
+
+        {toast && (
+          <div
+            aria-live="assertive"
+            className={`checkout-toast checkout-toast-${toast.tone}`}
+            role="status"
+          >
+            <span>{toast.tone === "success" ? "✓" : "!"}</span>
+            {toast.message}
+          </div>
+        )}
       </main>
     </>
   );
