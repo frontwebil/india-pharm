@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Script from "next/script";
@@ -40,7 +41,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           strategy="beforeInteractive"
         />
         <TelegramGuard />
-        <CartOrderButton />
+        <Suspense fallback={null}>
+          <CartOrderButton />
+        </Suspense>
         {children}
       </body>
     </html>
