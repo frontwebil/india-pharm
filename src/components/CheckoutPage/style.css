@@ -10,7 +10,7 @@
 .checkout-page-loader {
   position: fixed;
   inset: 0;
-  z-index: 30;
+  z-index: 100;
   display: grid;
   place-items: center;
   background: rgb(10 13 20 / 38%);

@@ -277,8 +277,12 @@ export function CheckoutPage() {
     <>
       <Header />
       <main className="checkout-page">
-        {isSubmitting && (
-          <div className="checkout-page-loader" aria-live="polite" role="status">
+        {1 == 1 && (
+          <div
+            className="checkout-page-loader"
+            aria-live="polite"
+            role="status"
+          >
             <div className="checkout-page-loader-spinner" aria-hidden="true" />
           </div>
         )}
@@ -528,7 +532,6 @@ export function CheckoutPage() {
             </aside>
           </div>
         </div>
-
       </main>
     </>
   );
