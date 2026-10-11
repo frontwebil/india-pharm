@@ -74,7 +74,7 @@ export function CartOrderButton() {
     return () => {
       mainButton.offClick(handleCheckout);
     };
-  }, [isReady, itemCount, tg, router]);
+  }, [isReady, itemCount, tg, router , router]);
 
   return null;
 }
