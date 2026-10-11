@@ -277,6 +277,11 @@ export function CheckoutPage() {
     <>
       <Header />
       <main className="checkout-page">
+        {isSubmitting && (
+          <div className="checkout-page-loader" aria-live="polite" role="status">
+            <div className="checkout-page-loader-spinner" aria-hidden="true" />
+          </div>
+        )}
         <div className="checkout-container">
           <Link className="checkout-back-link" href="/catalog">
             <FiArrowLeft aria-hidden="true" />
