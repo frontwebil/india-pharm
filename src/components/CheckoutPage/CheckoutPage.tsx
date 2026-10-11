@@ -225,7 +225,6 @@ export function CheckoutPage() {
         window.Telegram.WebApp.close();
       } else {
         onClose();
-        router.replace("/catalog");
       }
     } catch (error) {
       console.error("Checkout submit failed:", error);
