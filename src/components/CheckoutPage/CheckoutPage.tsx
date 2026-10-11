@@ -147,17 +147,17 @@ export function CheckoutPage() {
 
           <div className="checkout-heading">
             <div>
-              <span className="checkout-eyebrow">Залишився останній крок</span>
+              {/* <span className="checkout-eyebrow">Залишився останній крок</span> */}
               <h1>Оформлення замовлення</h1>
               <p>Заповніть контактні дані та оберіть зручні умови доставки.</p>
             </div>
-            <div className="checkout-step" aria-label="Крок 2 з 2">
+            {/* <div className="checkout-step" aria-label="Крок 2 з 2">
               <span>Крок 2 з 2</span>
               <div className="checkout-step-track">
                 <span />
               </div>
               <small>Дані отримувача</small>
-            </div>
+            </div> */}
           </div>
 
           {loadError && (
