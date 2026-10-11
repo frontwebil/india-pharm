@@ -55,9 +55,17 @@ export function CartOrderButton() {
 
   useEffect(() => {
     if (!tg) return;
-    if (pathname === "/checkout") return;
 
     const mainButton = tg.MainButton;
+    const handleCheckout = () => {
+      router.push("/checkout");
+    };
+
+    if (pathname === "/checkout") {
+      mainButton.offClick(handleCheckout);
+      mainButton.hide();
+      return;
+    }
 
     if (isReady && itemCount > 0) {
       mainButton.setText("Оформити замовлення");
@@ -67,14 +75,10 @@ export function CartOrderButton() {
       mainButton.hide();
     }
 
-    function handleCheckout() {
-      router.push("/checkout");
-    }
-
     return () => {
       mainButton.offClick(handleCheckout);
     };
-  }, [isReady, itemCount, tg, router , router]);
+  }, [isReady, itemCount, pathname, router, tg]);
 
   return null;
 }
