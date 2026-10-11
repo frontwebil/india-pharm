@@ -17,8 +17,6 @@ type CartVariant = {
   price?: number | string;
 };
 
-type ToastTone = "success" | "error";
-
 type FormErrorState = Partial<Record<"name" | "phone" | "adress", boolean>>;
 
 function getCartVariant(
@@ -53,18 +51,7 @@ export function CheckoutPage() {
   const [loadError, setLoadError] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<FormErrorState>({});
-  const [toast, setToast] = useState<{
-    message: string;
-    tone: ToastTone;
-  } | null>(null);
   const formRef = useRef<HTMLFormElement | null>(null);
-
-  useEffect(() => {
-    if (!toast) return;
-
-    const timeout = window.setTimeout(() => setToast(null), 2800);
-    return () => window.clearTimeout(timeout);
-  }, [toast]);
 
   useEffect(() => {
     let isCurrent = true;
@@ -150,10 +137,6 @@ export function CheckoutPage() {
 
     if (isSubmitting) return;
     if (orderItems.length === 0) {
-      setToast({
-        message: "Кошик порожній. Додайте товари перед оформленням.",
-        tone: "error",
-      });
       return;
     }
 
@@ -183,11 +166,6 @@ export function CheckoutPage() {
       !paymentType ||
       !prefferContactMethod
     ) {
-      setToast({
-        message:
-          "Заповніть всі обов’язкові поля та виберіть спосіб доставки/оплати.",
-        tone: "error",
-      });
       return;
     }
 
@@ -239,11 +217,6 @@ export function CheckoutPage() {
         throw new Error("Не вдалося оформити замовлення. Спробуйте ще раз.");
       }
 
-      setToast({
-        message: "Замовлення успішно відправлено.",
-        tone: "success",
-      });
-
       await new Promise((resolve) => window.setTimeout(resolve, 800));
 
       if (typeof window !== "undefined" && window.Telegram?.WebApp) {
@@ -253,13 +226,7 @@ export function CheckoutPage() {
         router.replace("/catalog");
       }
     } catch (error) {
-      setToast({
-        message:
-          error instanceof Error
-            ? error.message
-            : "Не вдалося оформити замовлення.",
-        tone: "error",
-      });
+      console.error("Checkout submit failed:", error);
 
       if (tg?.MainButton) {
         tg.MainButton.enable();
@@ -557,16 +524,6 @@ export function CheckoutPage() {
           </div>
         </div>
 
-        {toast && (
-          <div
-            aria-live="assertive"
-            className={`checkout-toast checkout-toast-${toast.tone}`}
-            role="status"
-          >
-            <span>{toast.tone === "success" ? "✓" : "!"}</span>
-            {toast.message}
-          </div>
-        )}
       </main>
     </>
   );
