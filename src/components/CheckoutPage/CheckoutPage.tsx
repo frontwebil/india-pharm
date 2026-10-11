@@ -42,7 +42,7 @@ function formatPrice(value: number) {
 
 export function CheckoutPage() {
   const router = useRouter();
-  const { tg, onClose } = useTelegram();
+  const { tg, onClose, user } = useTelegram();
   const cartItems = useCartStore((state) => state.items);
   const reconcileProducts = useCartStore((state) => state.reconcileProducts);
   const products = useProductsStore((state) => state.products);
@@ -131,6 +131,8 @@ export function CheckoutPage() {
     (sum, item) => sum + item.price * item.quantity,
     0,
   );
+  const userChatId = String(user?.id ?? "");
+  const userTelegram = String(user?.username ?? "");
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -164,7 +166,9 @@ export function CheckoutPage() {
       Object.keys(nextErrors).length > 0 ||
       !delivery ||
       !paymentType ||
-      !prefferContactMethod
+      !prefferContactMethod ||
+      !userChatId ||
+      !userTelegram
     ) {
       return;
     }
@@ -177,6 +181,7 @@ export function CheckoutPage() {
     }
 
     const payload = {
+      id: Date.now(),
       status: "New",
       name,
       phone,
@@ -184,6 +189,8 @@ export function CheckoutPage() {
       delivery,
       paymentType,
       prefferContactMethod,
+      userChatId,
+      userTelegram,
       products: orderItems.map((item) => ({
         productId: item.productId,
         name: item.name,
@@ -195,10 +202,6 @@ export function CheckoutPage() {
         variantKey: item.variantKey ?? null,
         image: item.image ?? null,
       })),
-      total: Number(total.toFixed(2)),
-      currency: "UAH",
-      source: "telegram-mini-app",
-      createdAt: new Date().toISOString(),
     };
 
     try {

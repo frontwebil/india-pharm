@@ -82,5 +82,8 @@ model Order {
 
   prefferContactMethod String
 
+  userChatId String
+  userTelegram String
+
   products Json
 }
