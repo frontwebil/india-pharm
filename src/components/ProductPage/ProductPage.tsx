@@ -218,7 +218,9 @@ export function ProductPage({ id }: { id: string }) {
           role="status"
           aria-live="polite"
         >
-          <span aria-hidden="true">{cartToast.tone === "success" ? "✓" : "!"}</span>
+          <span aria-hidden="true">
+            {cartToast.tone === "success" ? "✓" : "!"}
+          </span>
           {cartToast.message}
         </div>
       )}
@@ -409,7 +411,10 @@ export function ProductPage({ id }: { id: string }) {
                             tone: "success",
                           });
                         } catch (error) {
-                          console.error("Не вдалося додати товар до кошика:", error);
+                          console.error(
+                            "Не вдалося додати товар до кошика:",
+                            error,
+                          );
                           showCartToast({
                             message:
                               "Не вдалося зберегти кошик. Спробуйте ще раз.",

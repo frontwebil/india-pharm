@@ -38,8 +38,8 @@ function getCartVariant(
 function formatCartPrice(value: unknown) {
   const price = Number(value);
   return Number.isFinite(price)
-    ? `${price.toLocaleString("uk-UA", { maximumFractionDigits: 2 })} грн`
-    : "Ціну уточнюйте";
+    ? `${price.toLocaleString("uk-UA", { maximumFractionDigits: 2 })}`
+    : 0;
 }
 
 export function Header() {
@@ -279,7 +279,14 @@ export function Header() {
                                   {item.packageName}
                                 </span>
                               )}
-                              <strong>{formatCartPrice(item.price)}</strong>
+                              <strong>
+                                {formatCartPrice(item.price * item.quantity)}грн
+                                <span className="header-cart-item-package">
+                                  {" "}
+                                  ({formatCartPrice(item.price)} грн x{" "}
+                                  {item.quantity} шт)
+                                </span>
+                              </strong>
                               <div className="header-cart-item-controls">
                                 <div className="header-cart-quantity">
                                   <button
@@ -333,11 +340,11 @@ export function Header() {
                       </div>
                       <div className="header-cart-total">
                         <span>Разом</span>
-                        <strong>{formatCartPrice(cartTotal)}</strong>
+                        <strong>{formatCartPrice(cartTotal)} грн</strong>
                       </div>
                       <p className="header-cart-order-hint">
-                        Для оформлення замовлення натисніть кнопку {"Оформити замовлення"}{" "}
-                        в нижній частині екрану.
+                        Для оформлення замовлення натисніть кнопку{" "}
+                        {"Оформити замовлення"} в нижній частині екрану.
                       </p>
                     </>
                   )}

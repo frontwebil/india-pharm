@@ -51,7 +51,12 @@ export function Hero() {
               <FaArrowRight />
             </Link>
 
-            <a href="#consultation" className="hero-btn-secondary">
+            <a
+              href="https://t.me/iLyhaha1"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hero-btn-secondary"
+            >
               Анонімна консультація
             </a>
           </div>

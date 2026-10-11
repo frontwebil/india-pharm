@@ -1,29 +1,17 @@
 "use client";
 
-import { useTelegram } from "@/hooks/useTelegram";
-import { useEffect } from "react";
 import { Header } from "./Header/Header";
 import { Hero } from "./Hero/Hero";
 import { Categories } from "./Categories/Categories";
 import { CategoriesTopSales } from "./Categories/CategoriesTopSales";
 
 export default function MainPage() {
-  const { tg, user, queryId } = useTelegram();
-
-  useEffect(() => {
-    if (!tg) return;
-  }, [tg]);
-
-  if (!tg) {
-    return null;
-  }
-
   return (
     <main className="min-h-screenbg-white">
       <Header />
       <Hero />
-      <CategoriesTopSales />
       <Categories />
+      <CategoriesTopSales />
       {/* <section className="rounded-xl border border-neutral-800 p-4">
         <h2 className="mb-4 text-lg font-semibold">Telegram User</h2>
 
