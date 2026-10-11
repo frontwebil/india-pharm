@@ -65,6 +65,7 @@ export function CartOrderButton() {
       mainButton.hide();
     }
 
+    
     function handleCheckout() {
       router.push("/checkout");
     }
