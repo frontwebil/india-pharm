@@ -4,15 +4,17 @@ import { Header } from "./Header/Header";
 import { Hero } from "./Hero/Hero";
 import { Categories } from "./Categories/Categories";
 import { CategoriesTopSales } from "./Categories/CategoriesTopSales";
+import { useTelegram } from "@/hooks/useTelegram";
 
 export default function MainPage() {
+  const { user, queryId } = useTelegram();
   return (
     <main className="min-h-screenbg-white">
       <Header />
       <Hero />
       <Categories />
       <CategoriesTopSales />
-      {/* <section className="rounded-xl border border-neutral-800 p-4">
+      <section className="rounded-xl border border-neutral-800 p-4">
         <h2 className="mb-4 text-lg font-semibold">Telegram User</h2>
 
         <div className="space-y-2 text-sm">
@@ -41,7 +43,7 @@ export default function MainPage() {
             {queryId ?? "Немає даних"}
           </p>
         </div>
-      </section> */}
+      </section>
 
       {/* <section className="mt-4 flex-1">
         {loading && <p>Завантаження товарів...</p>}
