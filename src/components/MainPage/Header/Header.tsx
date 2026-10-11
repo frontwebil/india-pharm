@@ -92,17 +92,14 @@ export function Header() {
 
     document.addEventListener("mousedown", handleClickOutside);
 
-    if (isCatalogOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    const isOverlayOpen = isCatalogOpen || isCartOpen;
+    document.body.style.overflow = isOverlayOpen ? "hidden" : "";
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
       document.body.style.overflow = "";
     };
-  }, [isCatalogOpen]);
+  }, [isCatalogOpen, isCartOpen]);
 
   return (
     <>
