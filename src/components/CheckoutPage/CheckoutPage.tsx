@@ -277,7 +277,7 @@ export function CheckoutPage() {
     <>
       <Header />
       <main className="checkout-page">
-        {1 == 1 && (
+        {isSubmitting && (
           <div
             className="checkout-page-loader"
             aria-live="polite"
