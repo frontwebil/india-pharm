@@ -2,7 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import {
+  FormEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { FiArrowLeft, FiLock, FiPackage } from "react-icons/fi";
 import { useRouter } from "next/navigation";
 import { CartItem, useCartStore } from "@/store/cartStore";
@@ -18,6 +25,11 @@ type CartVariant = {
 };
 
 type FormErrorState = Partial<Record<"name" | "phone" | "adress", boolean>>;
+
+type CheckoutToast = {
+  message: string;
+  tone: "error";
+};
 
 function getCartVariant(
   value: unknown,
@@ -51,7 +63,25 @@ export function CheckoutPage() {
   const [loadError, setLoadError] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<FormErrorState>({});
+  const [checkoutToast, setCheckoutToast] = useState<CheckoutToast | null>(
+    null,
+  );
   const formRef = useRef<HTMLFormElement | null>(null);
+  const checkoutToastTimeout = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
+
+  const showCheckoutToast = useCallback((message: string) => {
+    if (checkoutToastTimeout.current) {
+      clearTimeout(checkoutToastTimeout.current);
+    }
+
+    setCheckoutToast({ message, tone: "error" });
+    checkoutToastTimeout.current = setTimeout(
+      () => setCheckoutToast(null),
+      3500,
+    );
+  }, []);
 
   useEffect(() => {
     let isCurrent = true;
@@ -85,7 +115,12 @@ export function CheckoutPage() {
           "Не вдалося відновити дані для оформлення замовлення:",
           error,
         );
-        if (isCurrent) setLoadError(true);
+        if (isCurrent) {
+          setLoadError(true);
+          showCheckoutToast(
+            "Не вдалося завантажити кошик. Оновіть сторінку та спробуйте ще раз.",
+          );
+        }
       }
     }
 
@@ -94,7 +129,16 @@ export function CheckoutPage() {
     return () => {
       isCurrent = false;
     };
-  }, [loadProducts, reconcileProducts, router]);
+  }, [loadProducts, reconcileProducts, router, showCheckoutToast]);
+
+  useEffect(
+    () => () => {
+      if (checkoutToastTimeout.current) {
+        clearTimeout(checkoutToastTimeout.current);
+      }
+    },
+    [],
+  );
 
   useEffect(() => {
     if (isReady && cartItems.length === 0) {
@@ -139,6 +183,7 @@ export function CheckoutPage() {
 
     if (isSubmitting) return;
     if (orderItems.length === 0) {
+      showCheckoutToast("Кошик порожній. Додайте товари перед оформленням.");
       return;
     }
 
@@ -162,14 +207,37 @@ export function CheckoutPage() {
 
     setFieldErrors(nextErrors);
 
-    if (
-      Object.keys(nextErrors).length > 0 ||
-      !delivery ||
-      !paymentType ||
-      !prefferContactMethod ||
-      !userChatId ||
-      !userTelegram
-    ) {
+    if (nextErrors.name || nextErrors.phone || nextErrors.adress) {
+      const message = nextErrors.name
+        ? "Вкажіть, будь ласка, ім’я та прізвище."
+        : nextErrors.phone
+          ? "Вкажіть номер телефону для зв’язку."
+          : "Вкажіть адресу або номер відділення для доставки.";
+      showCheckoutToast(message);
+      return;
+    }
+
+    if (!delivery) {
+      showCheckoutToast("Оберіть спосіб доставки.");
+      return;
+    }
+
+    if (!paymentType) {
+      showCheckoutToast("Оберіть спосіб оплати.");
+      return;
+    }
+
+    if (!prefferContactMethod) {
+      showCheckoutToast("Оберіть, як з вами зв’язатися.");
+      return;
+    }
+
+    if (!userChatId || !userTelegram) {
+      showCheckoutToast(
+        !userChatId
+          ? "Не вдалося отримати дані Telegram. Відкрийте магазин у Telegram і спробуйте ще раз."
+          : "У вашому Telegram-профілі не вказано ім’я користувача. Додайте його та повторіть спробу.",
+      );
       return;
     }
 
@@ -217,7 +285,16 @@ export function CheckoutPage() {
       );
 
       if (!response.ok) {
-        throw new Error("Не вдалося оформити замовлення. Спробуйте ще раз.");
+        showCheckoutToast(
+          response.status >= 500
+            ? "Сервер тимчасово недоступний. Зачекайте трохи та спробуйте ще раз."
+            : "Не вдалося оформити замовлення. Перевірте дані та спробуйте ще раз.",
+        );
+        if (tg?.MainButton) {
+          tg.MainButton.enable();
+          tg.MainButton.setText("Оформити замовлення");
+        }
+        return;
       }
 
       useCartStore.getState().clearCart();
@@ -231,6 +308,11 @@ export function CheckoutPage() {
       }
     } catch (error) {
       console.error("Checkout submit failed:", error);
+      showCheckoutToast(
+        error instanceof TypeError
+          ? "Не вдалося зв’язатися із сервером. Перевірте підключення до інтернету та спробуйте ще раз."
+          : "Сталася помилка під час оформлення. Спробуйте ще раз.",
+      );
 
       if (tg?.MainButton) {
         tg.MainButton.enable();
@@ -281,6 +363,16 @@ export function CheckoutPage() {
     <>
       <Header />
       <main className="checkout-page">
+        {checkoutToast && (
+          <div
+            className={`checkout-toast checkout-toast-${checkoutToast.tone}`}
+            role="alert"
+            aria-live="assertive"
+          >
+            <span aria-hidden="true">!</span>
+            {checkoutToast.message}
+          </div>
+        )}
         {isSubmitting && (
           <div
             className="checkout-page-loader"
@@ -313,6 +405,7 @@ export function CheckoutPage() {
           <div className="checkout-layout">
             <form
               className="checkout-form"
+              noValidate
               onSubmit={handleSubmit}
               ref={formRef}
             >
