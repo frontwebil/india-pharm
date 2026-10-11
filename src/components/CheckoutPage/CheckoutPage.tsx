@@ -217,6 +217,8 @@ export function CheckoutPage() {
         throw new Error("Не вдалося оформити замовлення. Спробуйте ще раз.");
       }
 
+      useCartStore.getState().clearCart();
+
       await new Promise((resolve) => window.setTimeout(resolve, 800));
 
       if (typeof window !== "undefined" && window.Telegram?.WebApp) {

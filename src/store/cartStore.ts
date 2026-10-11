@@ -31,6 +31,7 @@ type CartState = {
     variantKey: string | null,
     packageName: string | null,
   ) => void;
+  clearCart: () => void;
   reconcileProducts: (products: Product[]) => void;
 };
 
@@ -165,6 +166,14 @@ export const useCartStore = create<CartState>()(
               item.packageName !== packageName,
           ),
         })),
+      clearCart: () => {
+        set({ items: [] });
+
+        if (typeof window !== "undefined") {
+          window.localStorage.removeItem(STORAGE_NAME);
+          document.cookie = `${encodeURIComponent(STORAGE_NAME)}=; Max-Age=0; Path=/; SameSite=Lax`;
+        }
+      },
       reconcileProducts: (products) =>
         set((state) => {
           const productsById = new Map(

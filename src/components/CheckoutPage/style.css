@@ -250,6 +250,13 @@
   box-shadow: 0 0 0 3px rgb(22 40 102 / 8%);
 }
 
+.checkout-field-error input,
+.checkout-field-error textarea {
+  border-color: #e46464;
+  background: #fff7f7;
+  box-shadow: 0 0 0 3px rgb(228 100 100 / 10%);
+}
+
 .checkout-choice-group {
   min-width: 0;
   padding: 0;
