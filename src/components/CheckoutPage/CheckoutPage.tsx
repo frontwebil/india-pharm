@@ -206,7 +206,7 @@ export function CheckoutPage() {
 
     try {
       const response = await fetch(
-        "https://jsonplaceholder.typicode.com/posts",
+        "http://localhost:8000/api/order",
         {
           method: "POST",
           headers: {
