@@ -219,7 +219,7 @@ export function CheckoutPage() {
 
       useCartStore.getState().clearCart();
 
-      await new Promise((resolve) => window.setTimeout(resolve, 800));
+      await new Promise((resolve) => window.setTimeout(resolve, 100));
 
       if (typeof window !== "undefined" && window.Telegram?.WebApp) {
         window.Telegram.WebApp.close();
