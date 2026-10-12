@@ -5,7 +5,6 @@ import { useEffect, useMemo } from "react";
 import { useProductsStore } from "@/store/productsStore";
 import { Header } from "@/components/MainPage/Header/Header";
 import { CatalogProducts } from "@/components/CatalogPage/CatalogProducts/CatalogProducts";
-import "@/components/CatalogPage/style.css";
 
 export function SearchResultsPage({ query }: { query: string }) {
   const products = useProductsStore((state) => state.products);
