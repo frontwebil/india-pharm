@@ -8,16 +8,18 @@ export default function TelegramGuard() {
   useEffect(() => {
     const tg = window.Telegram?.WebApp;
     const pathname = window.location.pathname;
-    const isAdminRoute = pathname.startsWith("/admin") || pathname.startsWith("/api");
+    const isAdminRoute =
+      pathname.startsWith("/admin") || pathname.startsWith("/api");
 
-    if (!tg) {
-      if (!isAdminRoute) {
-        window.location.replace(BOT_URL);
-      }
+    if (!tg?.initData && !isAdminRoute) {
+      window.location.replace(BOT_URL);
       return;
     }
 
-    tg.ready();
+    if (tg?.initData) {
+      tg.ready();
+      tg.expand?.();
+    }
   }, []);
 
   return null;
