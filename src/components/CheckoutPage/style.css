@@ -548,6 +548,40 @@
   line-height: 1.5;
 }
 
+.checkout-local-test {
+  margin-top: 18px;
+}
+
+.checkout-local-test-button {
+  width: 100%;
+  min-height: 42px;
+  padding: 9px 12px;
+  border: 1px dashed #b46b12;
+  border-radius: 9px;
+  background: #fff8ec;
+  color: #80500d;
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.checkout-local-test-button:hover:not(:disabled) {
+  background: #fff0d4;
+}
+
+.checkout-local-test-button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.checkout-local-test > p {
+  margin: 7px 0 0;
+  color: #8993a5;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
 .checkout-error {
   padding: 13px 15px;
   margin: 0 0 18px;

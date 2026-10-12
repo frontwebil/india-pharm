@@ -322,6 +322,67 @@ export function CheckoutPage() {
     }
   }
 
+  async function handleLocalTestRequest() {
+    if (isSubmitting) return;
+
+    const formData = formRef.current
+      ? new FormData(formRef.current)
+      : new FormData();
+    const testPayload = {
+      id: Date.now(),
+      status: "New",
+      name: String(formData.get("name") ?? "").trim() || "Локальний тест",
+      phone: String(formData.get("phone") ?? "").trim() || "+380000000000",
+      adress:
+        String(formData.get("adress") ?? "").trim() || "Тестова адреса",
+      delivery: String(formData.get("delivery") ?? "") || "nova-poshta",
+      paymentType:
+        String(formData.get("payment") ?? "") || "cash-on-delivery",
+      prefferContactMethod: String(formData.get("contact") ?? "") || "phone-call",
+      userChatId: userChatId || "local-test",
+      userTelegram: userTelegram || "local-test",
+      products: orderItems.map((item) => ({
+        productId: item.productId,
+        name: item.name,
+        selectedVariant: item.selectedVariant,
+        quantity: item.quantity,
+        price: Number(item.price.toFixed(2)),
+        totalPrice: Number((item.price * item.quantity).toFixed(2)),
+        packageName: item.packageName ?? null,
+        variantKey: item.variantKey ?? null,
+        image: item.image ?? null,
+      })),
+    };
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch("/api/order", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(testPayload),
+      });
+
+      if (!response.ok) {
+        showCheckoutToast(
+          `Локальний тестовий запит завершився помилкою (HTTP ${response.status}).`,
+        );
+        return;
+      }
+
+      showCheckoutToast("Локальний тестовий запит успішно відправлено.");
+    } catch (error) {
+      console.error("Local checkout test request failed:", error);
+      showCheckoutToast(
+        "Не вдалося надіслати тестовий запит на локальний сервер.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
   useEffect(() => {
     if (!tg) return;
 
@@ -625,6 +686,23 @@ export function CheckoutPage() {
                 <FiLock aria-hidden="true" />
                 <p>Ваші дані потрібні лише для оформлення доставки.</p>
               </div>
+
+              {process.env.NODE_ENV === "development" && (
+                <div className="checkout-local-test">
+                  <button
+                    className="checkout-local-test-button"
+                    disabled={isSubmitting}
+                    onClick={() => void handleLocalTestRequest()}
+                    type="button"
+                  >
+                    Тестовий запит на localhost
+                  </button>
+                  <p>
+                    Для локальної перевірки без валідації форми та Telegram.
+                    Кошик не очищається.
+                  </p>
+                </div>
+              )}
             </aside>
           </div>
         </div>
