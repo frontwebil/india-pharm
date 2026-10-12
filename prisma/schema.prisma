@@ -87,4 +87,5 @@ model Order {
 
   products Json
   ttn String?
+  createdAt DateTime @default(now())
 }
