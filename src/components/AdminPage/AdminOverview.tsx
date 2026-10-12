@@ -34,7 +34,7 @@ type Order = {
   prefferContactMethod?: string | null;
   userTelegram?: string | null;
   createdAt?: string | null;
-  products: Array<{ name: string; quantity: number; price?: number }>;
+  products: Array<{ name: string; quantity: number; price?: number; selectedVariant?: string | null; packageName?: string | null; variantKey?: string | null }>;
 };
 
 export default function AdminOverview() {
@@ -343,7 +343,21 @@ export default function AdminOverview() {
                           {order.prefferContactMethod === "telegram" ? "Telegram" : "Дзвінок"}
                         </td>
                         <td className="px-5 py-4 text-slate-300 whitespace-nowrap">{formatPreferredContact(order)}</td>
-                        <td className="px-5 py-4 text-slate-300 whitespace-nowrap">{order.products.length}</td>
+                        <td className="px-5 py-4 text-slate-300">
+                          <div className="max-w-[220px] space-y-1">
+                            {order.products.slice(0, 3).map((product, index) => (
+                              <div key={`${order.id}-${product.name}-${product.variantKey ?? index}`} className="text-xs text-slate-200">
+                                <span className="font-medium text-white">{product.name}</span>
+                                {product.selectedVariant || product.packageName ? (
+                                  <span className="text-slate-400"> · {product.selectedVariant || product.packageName}</span>
+                                ) : null}
+                              </div>
+                            ))}
+                            {order.products.length > 3 ? (
+                              <div className="text-[11px] text-slate-400">+{order.products.length - 3} ще</div>
+                            ) : null}
+                          </div>
+                        </td>
                         <td className="px-5 py-4 text-right whitespace-nowrap">
                           <Link href={`/admin/orders/${order.id}/edit`} className="rounded-lg border border-slate-700 px-2.5 py-1.5 text-xs text-slate-200 transition hover:border-cyan-500 hover:text-cyan-300">
                             Редагувати

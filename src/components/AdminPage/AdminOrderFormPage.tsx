@@ -185,6 +185,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
   });
   const [status, setStatus] = useState("New");
   const [ttn, setTtn] = useState("");
+  const [createdAt, setCreatedAt] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [submitError, setSubmitError] = useState("");
   const [isEditorVisible, setIsEditorVisible] = useState(!orderId);
@@ -286,6 +287,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
           );
           setStatus(currentOrder?.status ?? "New");
           setTtn(currentOrder?.ttn ?? "");
+          setCreatedAt(currentOrder?.createdAt ?? null);
           setIsEditorVisible(false);
           setNovaPoshtaMeta({
             cityRef: currentOrder?.cityRef ?? "",
@@ -487,28 +489,10 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
 
         {orderId && (
           <div className="mb-6 rounded-2xl border border-slate-800 bg-slate-900 p-5">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                <div className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2">
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">Клієнт</p>
-                  <p className="mt-1 font-medium text-white">{formValues.name || "Без імені"}</p>
-                </div>
-                <div className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2">
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">Телефон</p>
-                  <p className="mt-1 font-medium text-white">{formValues.phone || "—"}</p>
-                </div>
-                <div className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2">
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">Зв'язок</p>
-                  <p className="mt-1 font-medium text-white">
-                    {formValues.prefferContactMethod === "telegram"
-                      ? `@${formValues.userTelegram || "username"}`
-                      : "Телефонний дзвінок"}
-                  </p>
-                </div>
-                <div className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2">
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">Адреса</p>
-                  <p className="mt-1 font-medium text-white">{formValues.adress || "Без адреси"}</p>
-                </div>
+            <div className="mb-4 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">Замовлення #{orderId}</p>
+                <h2 className="mt-2 text-xl font-semibold text-white">Інформація про замовлення</h2>
               </div>
 
               <button
@@ -523,6 +507,95 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
               >
                 Редагувати
               </button>
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+              <div className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">Клієнт</p>
+                <p className="mt-1 font-medium text-white">{formValues.name || "Без імені"}</p>
+              </div>
+              <div className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">Телефон</p>
+                <p className="mt-1 font-medium text-white">{formValues.phone || "—"}</p>
+              </div>
+              <div className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">Зв'язок</p>
+                <p className="mt-1 font-medium text-white">
+                  {formValues.prefferContactMethod === "telegram"
+                    ? `@${formValues.userTelegram || "username"}`
+                    : "Телефонний дзвінок"}
+                </p>
+              </div>
+              <div className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">Статус</p>
+                <p className="mt-1 font-medium text-white">{STATUS_LABELS[status] ?? status}</p>
+              </div>
+
+              <div className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">Дата створення</p>
+                <p className="mt-1 font-medium text-white">
+                  {createdAt
+                    ? new Date(createdAt).toLocaleString("uk-UA", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })
+                    : "—"}
+                </p>
+              </div>
+              <div className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">Доставка</p>
+                <p className="mt-1 font-medium text-white">
+                  {selectedDelivery === "nova-poshta"
+                    ? `Нова пошта · ${deliveryPointType === "postomat" ? "Поштомат" : "Відділення"}`
+                    : "Укрпошта"}
+                </p>
+              </div>
+              <div className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">Оплата</p>
+                <p className="mt-1 font-medium text-white">
+                  {formValues.paymentType === "cash-on-delivery" ? "Накладний платіж" : "Оплата на рахунок"}
+                </p>
+              </div>
+              <div className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">Сума</p>
+                <p className="mt-1 font-medium text-white">{total} грн</p>
+              </div>
+
+              <div className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 sm:col-span-2 xl:col-span-2">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">Адреса / склад</p>
+                <p className="mt-1 font-medium text-white">{novaPoshtaMeta.cityName || formValues.adress || "Без адреси"}</p>
+                {novaPoshtaMeta.warehouseName ? (
+                  <p className="mt-1 text-sm text-slate-300">{novaPoshtaMeta.warehouseName}</p>
+                ) : null}
+              </div>
+              <div className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 sm:col-span-2 xl:col-span-2">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">Товари</p>
+                <div className="mt-2 space-y-1 text-sm text-slate-200">
+                  {orderProducts.length === 0 ? (
+                    <span>Товари відсутні</span>
+                  ) : (
+                    orderProducts.map((item) => (
+                      <div key={`${item.productId}-${item.variantKey}-${item.packageName}`} className="flex items-center justify-between gap-2">
+                        <span>
+                          {item.name}
+                          {item.selectedVariant ? ` · ${item.selectedVariant}` : ""}
+                        </span>
+                        <span className="text-slate-400">{item.quantity} × {item.price} грн</span>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+
+              {status === "Delived" || ttn ? (
+                <div className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 sm:col-span-2 xl:col-span-2">
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">ТТН</p>
+                  <p className="mt-1 font-medium text-white">{ttn || "—"}</p>
+                </div>
+              ) : null}
             </div>
           </div>
         )}
