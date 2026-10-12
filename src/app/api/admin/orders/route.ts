@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
+import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 
 const TELEGRAM_NOTIFICATION_API_URL =
@@ -112,7 +113,7 @@ export async function POST(request: Request) {
     prefferContactMethod?: string;
     userChatId?: string;
     userTelegram?: string;
-    products?: unknown[];
+    products?: Prisma.InputJsonValue;
     ttn?: string | null;
   };
 
@@ -129,7 +130,7 @@ export async function POST(request: Request) {
       userChatId: payload.userChatId ?? "",
       userTelegram: payload.userTelegram ?? "",
       products: Array.isArray(payload.products)
-        ? (payload.products as unknown[])
+        ? (payload.products as Prisma.InputJsonValue)
         : [],
       ttn: payload.ttn ?? null,
     },
@@ -154,7 +155,7 @@ export async function PUT(request: Request) {
     prefferContactMethod?: string;
     userChatId?: string;
     userTelegram?: string;
-    products?: unknown[];
+    products?: Prisma.InputJsonValue;
     ttn?: string | null;
     sendTelegramNotification?: boolean;
   };
@@ -187,7 +188,7 @@ export async function PUT(request: Request) {
       userChatId: payload.userChatId ?? "",
       userTelegram: payload.userTelegram ?? "",
       products: Array.isArray(payload.products)
-        ? (payload.products as unknown[])
+        ? (payload.products as Prisma.InputJsonValue)
         : [],
       ttn: payload.ttn ?? null,
     },
