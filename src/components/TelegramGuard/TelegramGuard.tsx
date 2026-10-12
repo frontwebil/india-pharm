@@ -1,23 +1,30 @@
 "use client";
 
 import { useTelegram } from "@/hooks/useTelegram";
+import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
-const TELEGRAM_BOT_URL = "https://t.me/india_pharm_bot";
+const BOT_URL = "https://t.me/india_pharm_bot";
 
 export default function TelegramGuard() {
+  const pathname = usePathname();
   const { tg } = useTelegram();
+
   useEffect(() => {
-    const pathname = window.location.pathname;
-    const isAdminRoute =
-      pathname.startsWith("/admin") || pathname.startsWith("/api");
-
-    tg?.ready();
-
-    if (!tg && !isAdminRoute) {
-      window.location.replace(TELEGRAM_BOT_URL);
+    if (typeof window === "undefined") {
+      return;
     }
-  }, []);
+
+    const isAdminRoute = pathname.startsWith("/admin");
+
+    if (tg) {
+      return;
+    }
+
+    if (!isAdminRoute) {
+      window.location.replace(BOT_URL);
+    }
+  }, [pathname, tg]);
 
   return null;
 }
