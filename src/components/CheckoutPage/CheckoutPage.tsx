@@ -29,6 +29,7 @@ type FormErrorState = Partial<Record<"name" | "phone" | "adress", boolean>>;
 type CheckoutToast = {
   message: string;
   tone: "error";
+  debug?: string;
 };
 
 function getCartVariant(
@@ -71,15 +72,15 @@ export function CheckoutPage() {
     null,
   );
 
-  const showCheckoutToast = useCallback((message: string) => {
+  const showCheckoutToast = useCallback((message: string, debug?: string) => {
     if (checkoutToastTimeout.current) {
       clearTimeout(checkoutToastTimeout.current);
     }
 
-    setCheckoutToast({ message, tone: "error" });
+    setCheckoutToast({ message, tone: "error", debug });
     checkoutToastTimeout.current = setTimeout(
       () => setCheckoutToast(null),
-      3500,
+      debug ? 12000 : 3500,
     );
   }, []);
 
@@ -272,8 +273,10 @@ export function CheckoutPage() {
       })),
     };
 
+    const requestUrl = "http://localhost:8000/api/order";
+
     try {
-      const response = await fetch("http://localhost:8000/api/order", {
+      const response = await fetch(requestUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -282,10 +285,36 @@ export function CheckoutPage() {
       });
 
       if (!response.ok) {
+        let responseBody: unknown = null;
+        const responseText = await response.text();
+        if (responseText) {
+          try {
+            responseBody = JSON.parse(responseText);
+          } catch {
+            responseBody = responseText.slice(0, 4000);
+          }
+        }
+
+        const debug =
+          process.env.NODE_ENV !== "production"
+            ? JSON.stringify(
+                {
+                  url: requestUrl,
+                  method: "POST",
+                  status: response.status,
+                  statusText: response.statusText,
+                  response: responseBody,
+                },
+                null,
+                2,
+              )
+            : undefined;
+
         showCheckoutToast(
           response.status >= 500
             ? "Сервер тимчасово недоступний. Зачекайте трохи та спробуйте ще раз."
             : "Не вдалося оформити замовлення. Перевірте дані та спробуйте ще раз.",
+          debug,
         );
         if (tg?.MainButton) {
           tg.MainButton.enable();
@@ -305,10 +334,28 @@ export function CheckoutPage() {
       }
     } catch (error) {
       console.error("Checkout submit failed:", error);
+      const debug =
+        process.env.NODE_ENV !== "production"
+          ? JSON.stringify(
+              {
+                url: requestUrl,
+                method: "POST",
+                pageOrigin: window.location.origin,
+                error:
+                  error instanceof Error
+                    ? { name: error.name, message: error.message }
+                    : String(error),
+              },
+              null,
+              2,
+            )
+          : undefined;
+
       showCheckoutToast(
         error instanceof TypeError
           ? "Не вдалося зв’язатися із сервером. Перевірте підключення до інтернету та спробуйте ще раз."
           : "Сталася помилка під час оформлення. Спробуйте ще раз.",
+        debug,
       );
 
       if (tg?.MainButton) {
@@ -367,7 +414,14 @@ export function CheckoutPage() {
             aria-live="assertive"
           >
             <span aria-hidden="true">!</span>
-            {checkoutToast.message}
+            <div className="checkout-toast-content">
+              <div>{checkoutToast.message}</div>
+              {checkoutToast.debug && (
+                <pre className="checkout-toast-debug">
+                  {checkoutToast.debug}
+                </pre>
+              )}
+            </div>
           </div>
         )}
         {isSubmitting && (
