@@ -273,7 +273,7 @@ export function CheckoutPage() {
       })),
     };
 
-    const requestUrl = "http://localhost:8000/api/order";
+    const requestUrl = "/api/order";
 
     try {
       const response = await fetch(requestUrl, {
