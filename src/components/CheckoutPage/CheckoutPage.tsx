@@ -53,17 +53,18 @@ function formatPrice(value: number) {
   return `${value.toLocaleString("uk-UA", { maximumFractionDigits: 2 })} грн`;
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
 function getResponseErrorMessage(responseBody: unknown): string | undefined {
   if (typeof responseBody === "string") {
     return responseBody.trim().slice(0, 500) || undefined;
   }
 
-  if (typeof responseBody !== "object" || responseBody === null) {
-    return undefined;
-  }
+  if (!isRecord(responseBody)) return undefined;
 
   for (const key of ["message", "error", "detail"]) {
-    if (!(key in responseBody)) continue;
     const value = responseBody[key];
     if (typeof value === "string" && value.trim()) {
       return value.trim().slice(0, 500);
