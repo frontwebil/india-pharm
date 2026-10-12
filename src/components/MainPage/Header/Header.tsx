@@ -7,6 +7,7 @@ import "./style.css";
 import Link from "next/link";
 import { IoIosArrowDown } from "react-icons/io";
 import { FaArrowRight } from "react-icons/fa";
+import { FiSearch } from "react-icons/fi";
 import { FiMinus, FiPlus, FiTrash2 } from "react-icons/fi";
 import { categories } from "@/components/CatalogPage/categories";
 import { CartItem, useCartStore } from "@/store/cartStore";
@@ -45,6 +46,7 @@ function formatCartPrice(value: unknown) {
 export function Header() {
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const cartItems = useCartStore((state) => state.items);
   const setQuantity = useCartStore((state) => state.setQuantity);
   const removeItem = useCartStore((state) => state.removeItem);
@@ -87,6 +89,7 @@ export function Header() {
       ) {
         setIsCatalogOpen(false);
         setIsCartOpen(false);
+        setIsSearchOpen(false);
       }
     }
 
@@ -116,6 +119,59 @@ export function Header() {
           </Link>
 
           <nav className="header-container-right">
+            <form
+              action="/search"
+              method="get"
+              className="header-search-form header-search-form-desktop"
+              role="search"
+            >
+              <input
+                type="search"
+                name="q"
+                placeholder="Пошук товарів..."
+                aria-label="Пошук товарів"
+              />
+              <button type="submit" aria-label="Шукати">
+                <FiSearch />
+              </button>
+            </form>
+
+            <button
+              type="button"
+              className={`header-search-toggle ${
+                isSearchOpen ? "header-search-toggle-active" : ""
+              }`}
+              aria-label={isSearchOpen ? "Закрити пошук" : "Відкрити пошук"}
+              aria-expanded={isSearchOpen}
+              onClick={() => {
+                setIsSearchOpen((current) => !current);
+                setIsCatalogOpen(false);
+                setIsCartOpen(false);
+              }}
+            >
+              <FiSearch />
+            </button>
+
+            {isSearchOpen && (
+              <form
+                action="/search"
+                method="get"
+                className="header-search-form-mobile"
+                role="search"
+              >
+                <input
+                  type="search"
+                  name="q"
+                  placeholder="Пошук товарів..."
+                  aria-label="Пошук товарів"
+                  autoFocus
+                />
+                <button type="submit" aria-label="Шукати">
+                  <FiSearch />
+                </button>
+              </form>
+            )}
+
             <div className="header-catalog-wrapper">
               <button
                 type="button"
@@ -125,6 +181,7 @@ export function Header() {
                 onClick={() => {
                   setIsCatalogOpen((prev) => !prev);
                   setIsCartOpen(false);
+                  setIsSearchOpen(false);
                 }}
               >
                 <span>Каталог</span>
@@ -189,6 +246,7 @@ export function Header() {
                 onClick={() => {
                   setIsCartOpen((current) => !current);
                   setIsCatalogOpen(false);
+                  setIsSearchOpen(false);
                 }}
               >
                 <span className="header-cart-icon">

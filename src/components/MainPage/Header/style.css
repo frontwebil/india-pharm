@@ -47,6 +47,64 @@
   gap: 8px;
 }
 
+.header-search-form,
+.header-search-form-mobile {
+  align-items: center;
+  height: 42px;
+  border: 1px solid #e3e8ef;
+  border-radius: 10px;
+  background: #f8fafc;
+}
+
+.header-search-form-desktop {
+  display: flex;
+  width: min(260px, 24vw);
+  padding: 0 5px 0 12px;
+}
+
+.header-search-form input,
+.header-search-form-mobile input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #16213d;
+  font: inherit;
+  font-size: 12px;
+}
+
+.header-search-form input::placeholder,
+.header-search-form-mobile input::placeholder {
+  color: #8792a4;
+}
+
+.header-search-form button,
+.header-search-form-mobile button {
+  display: inline-flex;
+  flex: 0 0 32px;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 8px;
+  background: #162866;
+  color: #ffffff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.header-search-form button:hover,
+.header-search-form-mobile button:hover {
+  background: #203a82;
+}
+
+.header-search-toggle,
+.header-search-form-mobile {
+  display: none;
+}
+
 /* LINKS */
 
 .header-link,
@@ -551,6 +609,45 @@
 
   .header-container-right {
     gap: 6px;
+  }
+
+  .header-search-form-desktop {
+    display: none;
+  }
+
+  .header-search-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 10px;
+    background: #f2f5f8;
+    color: #16213d;
+    font-size: 19px;
+    cursor: pointer;
+  }
+
+  .header-search-toggle:hover,
+  .header-search-toggle-active {
+    background: #e9eef4;
+    color: #162866;
+  }
+
+  .header-search-form-mobile {
+    position: fixed;
+    top: 68px;
+    left: 0;
+    z-index: 110;
+    display: flex;
+    width: 100%;
+    height: 58px;
+    padding: 0 14px;
+    border-width: 0 0 1px;
+    border-radius: 0;
+    background: #ffffff;
+    box-shadow: 0 8px 18px rgba(22, 40, 102, 0.08);
   }
 
   .header-catalog {
