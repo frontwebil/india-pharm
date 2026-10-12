@@ -86,4 +86,5 @@ model Order {
   userTelegram String
 
   products Json
+  ttn String?
 }

@@ -19,7 +19,7 @@ export function CatalogHeading({
 }: CatalogHeadingProps) {
   return (
     <section className="catalog-page-heading">
-      <div className="catalog-heading-banner">
+      {/* <div className="catalog-heading-banner">
         <Image
           src="/catalog-banner.webp"
           alt=""
@@ -36,7 +36,7 @@ export function CatalogHeading({
             <span>Безкоштовна доставка від 1000 грн</span>
           </div>
         </div>
-      </div>
+      </div> */}
       <div className="buttons-flex">
         <button
           type="button"
