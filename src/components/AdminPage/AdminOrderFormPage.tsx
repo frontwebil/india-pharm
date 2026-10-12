@@ -190,6 +190,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
   const [ttn, setTtn] = useState("");
   const [createdAt, setCreatedAt] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [isEditorVisible, setIsEditorVisible] = useState(!orderId);
   const formRef = useRef<HTMLFormElement | null>(null);
@@ -359,6 +360,10 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
     event.preventDefault();
     setSubmitError("");
 
+    if (isSubmitting) {
+      return;
+    }
+
     if (orderProducts.length === 0) {
       setSubmitError("Додайте хоча б один товар до замовлення");
       return;
@@ -368,6 +373,8 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
       setSubmitError('Для статусу "У дорозі" потрібно вказати ТТН');
       return;
     }
+
+    setIsSubmitting(true);
 
     const formData = new FormData(event.currentTarget);
     const resolvedAddress =
@@ -423,22 +430,26 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
       })),
     };
 
-    const response = await fetch("/api/admin/orders", {
-      method: orderId ? "PUT" : "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
+    try {
+      const response = await fetch("/api/admin/orders", {
+        method: orderId ? "PUT" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-    if (!response.ok) {
-      setSubmitError(
-        orderId
-          ? "Не вдалося оновити замовлення"
-          : "Не вдалося зберегти замовлення",
-      );
-      return;
+      if (!response.ok) {
+        setSubmitError(
+          orderId
+            ? "Не вдалося оновити замовлення"
+            : "Не вдалося зберегти замовлення",
+        );
+        return;
+      }
+
+      router.push("/admin");
+    } finally {
+      setIsSubmitting(false);
     }
-
-    router.push("/admin");
   };
 
   if (isLoading || !isAllowed) {
@@ -1040,9 +1051,19 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
 
               <button
                 type="submit"
-                className="w-full rounded-xl bg-emerald-500 px-4 py-3 font-medium text-slate-950 transition hover:bg-emerald-400"
+                disabled={isSubmitting}
+                className="w-full rounded-xl bg-emerald-500 px-4 py-3 font-medium text-slate-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-70"
               >
-                {orderId ? "Оновити замовлення" : "Зберегти замовлення"}
+                {isSubmitting ? (
+                  <span className="inline-flex items-center justify-center gap-2">
+                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-slate-950/30 border-t-slate-950" />
+                    {orderId ? "Оновлення замовлення..." : "Збереження замовлення..."}
+                  </span>
+                ) : orderId ? (
+                  "Оновити замовлення"
+                ) : (
+                  "Зберегти замовлення"
+                )}
               </button>
             </aside>
           </form>
