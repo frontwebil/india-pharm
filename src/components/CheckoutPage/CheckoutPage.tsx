@@ -29,7 +29,6 @@ type FormErrorState = Partial<Record<"name" | "phone" | "adress", boolean>>;
 type CheckoutToast = {
   message: string;
   tone: "error";
-  debug?: string;
 };
 
 function getCartVariant(
@@ -53,27 +52,6 @@ function formatPrice(value: number) {
   return `${value.toLocaleString("uk-UA", { maximumFractionDigits: 2 })} грн`;
 }
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-}
-
-function getResponseErrorMessage(responseBody: unknown): string | undefined {
-  if (typeof responseBody === "string") {
-    return responseBody.trim().slice(0, 500) || undefined;
-  }
-
-  if (!isRecord(responseBody)) return undefined;
-
-  for (const key of ["message", "error", "detail"]) {
-    const value = responseBody[key];
-    if (typeof value === "string" && value.trim()) {
-      return value.trim().slice(0, 500);
-    }
-  }
-
-  return undefined;
-}
-
 export function CheckoutPage() {
   const router = useRouter();
   const { tg, onClose, user } = useTelegram();
@@ -93,15 +71,15 @@ export function CheckoutPage() {
     null,
   );
 
-  const showCheckoutToast = useCallback((message: string, debug?: string) => {
+  const showCheckoutToast = useCallback((message: string) => {
     if (checkoutToastTimeout.current) {
       clearTimeout(checkoutToastTimeout.current);
     }
 
-    setCheckoutToast({ message, tone: "error", debug });
+    setCheckoutToast({ message, tone: "error" });
     checkoutToastTimeout.current = setTimeout(
       () => setCheckoutToast(null),
-      debug ? 12000 : 3500,
+      3500,
     );
   }, []);
 
@@ -306,37 +284,10 @@ export function CheckoutPage() {
       });
 
       if (!response.ok) {
-        let responseBody: unknown = null;
-        const responseText = await response.text();
-        if (responseText) {
-          try {
-            responseBody = JSON.parse(responseText);
-          } catch {
-            responseBody = responseText.slice(0, 4000);
-          }
-        }
-
-        const responseError = getResponseErrorMessage(responseBody);
-        const debug = JSON.stringify(
-          {
-            url: requestUrl,
-            method: "POST",
-            status: response.status,
-            statusText: response.statusText,
-            response:
-              process.env.NODE_ENV !== "production"
-                ? responseBody
-                : responseError,
-          },
-          null,
-          2,
-        );
-
         showCheckoutToast(
-          `Не вдалося оформити замовлення (HTTP ${response.status}).${
-            responseError ? ` ${responseError}` : ""
-          }`,
-          debug,
+          response.status >= 500
+            ? "Сервер тимчасово недоступний. Зачекайте трохи та спробуйте ще раз."
+            : "Не вдалося оформити замовлення. Перевірте дані та спробуйте ще раз.",
         );
         if (tg?.MainButton) {
           tg.MainButton.enable();
@@ -356,26 +307,10 @@ export function CheckoutPage() {
       }
     } catch (error) {
       console.error("Checkout submit failed:", error);
-      const errorDetails =
-        error instanceof Error
-          ? { name: error.name, message: error.message }
-          : { message: String(error) };
-      const debug = JSON.stringify(
-        {
-          url: requestUrl,
-          method: "POST",
-          pageOrigin: window.location.origin,
-          error: errorDetails,
-        },
-        null,
-        2,
-      );
-
       showCheckoutToast(
-        `Не вдалося відправити запит на ${window.location.origin}${requestUrl}. ${
-          errorDetails.message || "Невідома помилка мережі."
-        }`,
-        debug,
+        error instanceof TypeError
+          ? "Не вдалося зв’язатися із сервером. Перевірте підключення до інтернету та спробуйте ще раз."
+          : "Сталася помилка під час оформлення. Спробуйте ще раз.",
       );
 
       if (tg?.MainButton) {
@@ -434,14 +369,7 @@ export function CheckoutPage() {
             aria-live="assertive"
           >
             <span aria-hidden="true">!</span>
-            <div className="checkout-toast-content">
-              <div>{checkoutToast.message}</div>
-              {checkoutToast.debug && (
-                <pre className="checkout-toast-debug">
-                  {checkoutToast.debug}
-                </pre>
-              )}
-            </div>
+            {checkoutToast.message}
           </div>
         )}
         {isSubmitting && (

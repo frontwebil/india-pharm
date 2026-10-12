@@ -591,23 +591,6 @@
   font-weight: 700;
 }
 
-.checkout-toast-content {
-  min-width: 0;
-}
-
-.checkout-toast-debug {
-  max-height: 180px;
-  overflow: auto;
-  margin: 8px 0 0;
-  padding: 8px;
-  border-radius: 6px;
-  background: rgb(255 255 255 / 75%);
-  color: #63291e;
-  font: 11px/1.45 monospace;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-}
-
 @keyframes checkout-toast-enter {
   from {
     opacity: 0;
