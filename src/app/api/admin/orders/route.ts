@@ -3,6 +3,9 @@ import { NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
 
+const TELEGRAM_NOTIFICATION_API_URL =
+  process.env.NOTIFICATION_API_URL ?? "http://localhost:8000/api/notificationTelegram";
+
 const serializeOrder = (order: {
   id: bigint | number;
   status: string | null;
@@ -36,6 +39,29 @@ const serializeOrder = (order: {
 const requireAdminAccess = async () => {
   const cookieStore = await cookies();
   return cookieStore.get("admin_session")?.value === "authenticated";
+};
+
+const sendTelegramNotification = async (order: unknown) => {
+  try {
+    const response = await fetch(TELEGRAM_NOTIFICATION_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ order }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text().catch(() => "");
+      console.error(
+        "Telegram notification request failed:",
+        response.status,
+        errorText,
+      );
+    }
+  } catch (error) {
+    console.error("Telegram notification delivery failed:", error);
+  }
 };
 
 export async function GET(request: Request) {
@@ -102,7 +128,9 @@ export async function POST(request: Request) {
       prefferContactMethod: payload.prefferContactMethod ?? "telegram",
       userChatId: payload.userChatId ?? "",
       userTelegram: payload.userTelegram ?? "",
-      products: Array.isArray(payload.products) ? (payload.products as any) : [],
+      products: Array.isArray(payload.products)
+        ? (payload.products as unknown[])
+        : [],
       ttn: payload.ttn ?? null,
     },
   });
@@ -128,18 +156,28 @@ export async function PUT(request: Request) {
     userTelegram?: string;
     products?: unknown[];
     ttn?: string | null;
+    sendTelegramNotification?: boolean;
   };
 
   if (!payload.id) {
     return NextResponse.json({ error: "Order id is required" }, { status: 400 });
   }
 
+  const orderId = BigInt(String(payload.id));
+  const currentOrder = await prisma.order.findUnique({
+    where: { id: orderId },
+  });
+
+  const nextStatus = payload.status ?? currentOrder?.status ?? "New";
+  const statusChanged =
+    !!currentOrder && currentOrder.status !== nextStatus && payload.status !== undefined;
+
   const record = await prisma.order.update({
     where: {
-      id: BigInt(String(payload.id)),
+      id: orderId,
     },
     data: {
-      status: payload.status ?? "New",
+      status: nextStatus,
       name: payload.name ?? "",
       phone: payload.phone ?? "",
       adress: payload.adress ?? "",
@@ -148,10 +186,16 @@ export async function PUT(request: Request) {
       prefferContactMethod: payload.prefferContactMethod ?? "telegram",
       userChatId: payload.userChatId ?? "",
       userTelegram: payload.userTelegram ?? "",
-      products: Array.isArray(payload.products) ? (payload.products as any) : [],
+      products: Array.isArray(payload.products)
+        ? (payload.products as unknown[])
+        : [],
       ttn: payload.ttn ?? null,
     },
   });
+
+  if (payload.sendTelegramNotification && statusChanged) {
+    await sendTelegramNotification(serializeOrder(record));
+  }
 
   return NextResponse.json({ order: serializeOrder(record) });
 }
