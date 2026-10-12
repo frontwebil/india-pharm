@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import {
   FormEvent,
@@ -10,11 +9,17 @@ import {
   useRef,
   useState,
 } from "react";
-import { FiArrowLeft, FiLock, FiPackage } from "react-icons/fi";
+import { FiArrowLeft } from "react-icons/fi";
 import { useRouter } from "next/navigation";
 import { CartItem, useCartStore } from "@/store/cartStore";
 import { useProductsStore } from "@/store/productsStore";
 import { Header } from "@/components/MainPage/Header/Header";
+import { CheckoutContactSection } from "@/components/CheckoutPage/CheckoutContactSection";
+import {
+  CheckoutOrderSummary,
+  CheckoutSummaryItem,
+} from "@/components/CheckoutPage/CheckoutOrderSummary";
+import { CheckoutDeliverySection } from "@/components/CheckoutPage/CheckoutDeliverySection";
 import { useTelegram } from "@/hooks/useTelegram";
 import "./style.css";
 
@@ -24,7 +29,7 @@ type CartVariant = {
   price?: number | string;
 };
 
-type FormErrorState = Partial<Record<"name" | "phone" | "adress", boolean>>;
+type FormErrorState = Partial<Record<"phone" | "adress", boolean>>;
 
 type CheckoutToast = {
   message: string;
@@ -48,10 +53,6 @@ function getCartVariant(
   }) as CartVariant | undefined;
 }
 
-function formatPrice(value: number) {
-  return `${value.toLocaleString("uk-UA", { maximumFractionDigits: 2 })} грн`;
-}
-
 export function CheckoutPage() {
   const router = useRouter();
   const { tg, onClose, user } = useTelegram();
@@ -62,6 +63,10 @@ export function CheckoutPage() {
   const [isReady, setIsReady] = useState(false);
   const [loadError, setLoadError] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedDelivery, setSelectedDelivery] = useState("");
+  const [selectedDeliveryPointType, setSelectedDeliveryPointType] = useState<
+    "branch" | "postomat"
+  >("branch");
   const [fieldErrors, setFieldErrors] = useState<FormErrorState>({});
   const [checkoutToast, setCheckoutToast] = useState<CheckoutToast | null>(
     null,
@@ -146,7 +151,7 @@ export function CheckoutPage() {
     }
   }, [cartItems.length, isReady, router]);
 
-  const orderItems = useMemo(
+  const orderItems = useMemo<CheckoutSummaryItem[]>(
     () =>
       cartItems.map((item) => {
         const product = products.find((entry) => entry.id === item.productId);
@@ -201,24 +206,43 @@ export function CheckoutPage() {
     const paymentType = String(formData.get("payment") ?? "").trim();
     const prefferContactMethod = String(formData.get("contact") ?? "").trim();
 
-    if (!name) nextErrors.name = true;
-    if (!phone) nextErrors.phone = true;
-    if (!adress) nextErrors.adress = true;
-
-    setFieldErrors(nextErrors);
-
-    if (nextErrors.name || nextErrors.phone || nextErrors.adress) {
-      const message = nextErrors.name
-        ? "Вкажіть, будь ласка, ім’я та прізвище."
-        : nextErrors.phone
-          ? "Вкажіть номер телефону для зв’язку."
-          : "Вкажіть адресу або номер відділення для доставки.";
-      showCheckoutToast(message);
+    if (!phone) {
+      nextErrors.phone = true;
+      setFieldErrors(nextErrors);
+      showCheckoutToast("Вкажіть номер телефону для зв’язку.");
       return;
     }
 
+    setFieldErrors({});
+
     if (!delivery) {
       showCheckoutToast("Оберіть спосіб доставки.");
+      return;
+    }
+
+    const deliveryPointType =
+      delivery === "nova-poshta" ? selectedDeliveryPointType : "";
+
+    if (delivery === "nova-poshta" && !deliveryPointType) {
+      showCheckoutToast("Оберіть відділення або поштомат Нової пошти.");
+      return;
+    }
+
+    const cityRef = String(formData.get("cityRef") ?? "");
+    const warehouseRef = String(formData.get("warehouseRef") ?? "");
+    if (
+      delivery === "nova-poshta" &&
+      (!cityRef || !warehouseRef)
+    ) {
+      setFieldErrors({ adress: true });
+      showCheckoutToast("Оберіть місто та відділення або поштомат зі списку.");
+      return;
+    }
+
+    if (!adress) {
+      setFieldErrors({ adress: true });
+      const message = "Вкажіть адресу або номер відділення для доставки.";
+      showCheckoutToast(message);
       return;
     }
 
@@ -254,7 +278,14 @@ export function CheckoutPage() {
       name,
       phone,
       adress,
-      delivery,
+      delivery: deliveryPointType
+        ? `${delivery}-${deliveryPointType}`
+        : delivery,
+      deliveryPointType: deliveryPointType || null,
+      cityRef: cityRef || null,
+      warehouseRef: warehouseRef || null,
+      cityName: String(formData.get("cityName") ?? "") || null,
+      warehouseName: String(formData.get("warehouseName") ?? "") || null,
       paymentType,
       prefferContactMethod,
       userChatId,
@@ -328,6 +359,12 @@ export function CheckoutPage() {
     const formData = formRef.current
       ? new FormData(formRef.current)
       : new FormData();
+    const testDelivery = String(formData.get("delivery") ?? "") || "nova-poshta";
+    const testDeliveryPointType =
+      testDelivery === "nova-poshta"
+        ? String(formData.get("deliveryPointType") ?? "") ||
+          selectedDeliveryPointType
+        : "";
     const testPayload = {
       id: Date.now(),
       status: "New",
@@ -335,7 +372,14 @@ export function CheckoutPage() {
       phone: String(formData.get("phone") ?? "").trim() || "+380000000000",
       adress:
         String(formData.get("adress") ?? "").trim() || "Тестова адреса",
-      delivery: String(formData.get("delivery") ?? "") || "nova-poshta",
+      delivery: testDeliveryPointType
+        ? `${testDelivery}-${testDeliveryPointType}`
+        : testDelivery,
+      deliveryPointType: testDeliveryPointType || null,
+      cityRef: String(formData.get("cityRef") ?? "") || null,
+      warehouseRef: String(formData.get("warehouseRef") ?? "") || null,
+      cityName: String(formData.get("cityName") ?? "") || null,
+      warehouseName: String(formData.get("warehouseName") ?? "") || null,
       paymentType:
         String(formData.get("payment") ?? "") || "cash-on-delivery",
       prefferContactMethod: String(formData.get("contact") ?? "") || "phone-call",
@@ -469,127 +513,15 @@ export function CheckoutPage() {
               onSubmit={handleSubmit}
               ref={formRef}
             >
-              <section className="checkout-section">
-                <div className="checkout-section-heading">
-                  <span className="checkout-section-number">01</span>
-                  <div>
-                    <h2>Контактні дані</h2>
-                    <p>Як до вас звертатися та як з вами зв’язатися</p>
-                  </div>
-                </div>
+              <CheckoutContactSection phoneError={Boolean(fieldErrors.phone)} />
 
-                <div className="checkout-fields">
-                  <label
-                    className={`checkout-field${fieldErrors.name ? " checkout-field-error" : ""}`}
-                  >
-                    <span>Ім’я та прізвище</span>
-                    <input
-                      autoComplete="name"
-                      aria-invalid={Boolean(fieldErrors.name)}
-                      name="name"
-                      placeholder="Наприклад, Іван Петренко"
-                      required
-                    />
-                  </label>
-                  <label
-                    className={`checkout-field${fieldErrors.phone ? " checkout-field-error" : ""}`}
-                  >
-                    <span>Телефон</span>
-                    <input
-                      autoComplete="tel"
-                      aria-invalid={Boolean(fieldErrors.phone)}
-                      inputMode="tel"
-                      name="phone"
-                      placeholder="+380 __ ___ __ __"
-                      required
-                      type="tel"
-                    />
-                  </label>
-                  <label
-                    className={`checkout-field checkout-field-full${fieldErrors.adress ? " checkout-field-error" : ""}`}
-                  >
-                    <span>Адреса доставки</span>
-                    <textarea
-                      autoComplete="street-address"
-                      aria-invalid={Boolean(fieldErrors.adress)}
-                      name="adress"
-                      placeholder="Місто, номер або адреса відділення"
-                      required
-                      rows={3}
-                    />
-                  </label>
-                </div>
-              </section>
-
-              <section className="checkout-section">
-                <div className="checkout-section-heading">
-                  <span className="checkout-section-number">02</span>
-                  <div>
-                    <h2>Доставка та оплата</h2>
-                    <p>Оберіть зручний для вас спосіб</p>
-                  </div>
-                </div>
-
-                <fieldset className="checkout-choice-group">
-                  <legend>Тип доставки</legend>
-                  <div className="checkout-choice-options">
-                    <label className="checkout-choice">
-                      <input
-                        defaultChecked
-                        name="delivery"
-                        required
-                        type="radio"
-                        value="nova-poshta"
-                      />
-                      <span className="checkout-radio-mark" />
-                      <span className="checkout-choice-copy">
-                        <strong>Нова пошта</strong>
-                        <small>У відділення або поштомат</small>
-                      </span>
-                    </label>
-                    <label className="checkout-choice">
-                      <input name="delivery" type="radio" value="ukrposhta" />
-                      <span className="checkout-radio-mark" />
-                      <span className="checkout-choice-copy">
-                        <strong>Укрпошта</strong>
-                        <small>Доставка у відділення</small>
-                      </span>
-                    </label>
-                  </div>
-                </fieldset>
-
-                <fieldset className="checkout-choice-group">
-                  <legend>Оплата</legend>
-                  <div className="checkout-choice-options">
-                    <label className="checkout-choice">
-                      <input
-                        defaultChecked
-                        name="payment"
-                        required
-                        type="radio"
-                        value="cash-on-delivery"
-                      />
-                      <span className="checkout-radio-mark" />
-                      <span className="checkout-choice-copy">
-                        <strong>Накладений платіж</strong>
-                        <small>Оплата при отриманні</small>
-                      </span>
-                    </label>
-                    <label className="checkout-choice">
-                      <input
-                        name="payment"
-                        type="radio"
-                        value="bank-transfer"
-                      />
-                      <span className="checkout-radio-mark" />
-                      <span className="checkout-choice-copy">
-                        <strong>Оплата на рахунок</strong>
-                        <small>Реквізити надасть менеджер</small>
-                      </span>
-                    </label>
-                  </div>
-                </fieldset>
-              </section>
+              <CheckoutDeliverySection
+                selectedDelivery={selectedDelivery}
+                onDeliveryChange={setSelectedDelivery}
+                deliveryPointType={selectedDeliveryPointType}
+                onDeliveryPointTypeChange={setSelectedDeliveryPointType}
+                addressError={Boolean(fieldErrors.adress)}
+              />
 
               <section className="checkout-section checkout-section-last">
                 <div className="checkout-section-heading">
@@ -605,9 +537,7 @@ export function CheckoutPage() {
                   <div className="checkout-choice-options">
                     <label className="checkout-choice">
                       <input
-                        defaultChecked
                         name="contact"
-                        required
                         type="radio"
                         value="telegram"
                       />
@@ -630,80 +560,12 @@ export function CheckoutPage() {
               </section>
             </form>
 
-            <aside className="checkout-summary">
-              <div className="checkout-summary-heading">
-                <div className="checkout-summary-icon">
-                  <FiPackage aria-hidden="true" />
-                </div>
-                <div>
-                  <h2>Ваше замовлення</h2>
-                  <span>
-                    {orderItems.reduce((sum, item) => sum + item.quantity, 0)}{" "}
-                    товар(и)
-                  </span>
-                </div>
-              </div>
-
-              <div className="checkout-order-items">
-                {orderItems.map((item) => (
-                  <div
-                    className="checkout-order-item"
-                    key={`${item.productId}-${item.variantKey}-${item.packageName}`}
-                  >
-                    <div className="checkout-product-image">
-                      {item.image ? (
-                        <Image
-                          alt=""
-                          height={64}
-                          src={item.image}
-                          unoptimized
-                          width={64}
-                        />
-                      ) : (
-                        <FiPackage aria-hidden="true" />
-                      )}
-                    </div>
-                    <div className="checkout-product-details">
-                      <strong>{item.name}</strong>
-                      {item.packageName && <small>{item.packageName}</small>}
-                      <span>
-                        {item.quantity} × {formatPrice(item.price)}
-                      </span>
-                    </div>
-                    <strong className="checkout-item-total">
-                      {formatPrice(item.price * item.quantity)}
-                    </strong>
-                  </div>
-                ))}
-              </div>
-
-              <div className="checkout-total">
-                <span>Разом до сплати</span>
-                <strong>{formatPrice(total)}</strong>
-              </div>
-
-              <div className="checkout-summary-note">
-                <FiLock aria-hidden="true" />
-                <p>Ваші дані потрібні лише для оформлення доставки.</p>
-              </div>
-
-              {process.env.NODE_ENV === "development" && (
-                <div className="checkout-local-test">
-                  <button
-                    className="checkout-local-test-button"
-                    disabled={isSubmitting}
-                    onClick={() => void handleLocalTestRequest()}
-                    type="button"
-                  >
-                    Тестовий запит на localhost
-                  </button>
-                  <p>
-                    Для локальної перевірки без валідації форми та Telegram.
-                    Кошик не очищається.
-                  </p>
-                </div>
-              )}
-            </aside>
+            <CheckoutOrderSummary
+              items={orderItems}
+              total={total}
+              isSubmitting={isSubmitting}
+              onLocalTestRequest={() => void handleLocalTestRequest()}
+            />
           </div>
         </div>
       </main>
