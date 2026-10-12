@@ -53,6 +53,26 @@ function formatPrice(value: number) {
   return `${value.toLocaleString("uk-UA", { maximumFractionDigits: 2 })} грн`;
 }
 
+function getResponseErrorMessage(responseBody: unknown): string | undefined {
+  if (typeof responseBody === "string") {
+    return responseBody.trim().slice(0, 500) || undefined;
+  }
+
+  if (typeof responseBody !== "object" || responseBody === null) {
+    return undefined;
+  }
+
+  for (const key of ["message", "error", "detail"]) {
+    if (!(key in responseBody)) continue;
+    const value = responseBody[key];
+    if (typeof value === "string" && value.trim()) {
+      return value.trim().slice(0, 500);
+    }
+  }
+
+  return undefined;
+}
+
 export function CheckoutPage() {
   const router = useRouter();
   const { tg, onClose, user } = useTelegram();
@@ -295,25 +315,26 @@ export function CheckoutPage() {
           }
         }
 
-        const debug =
-          process.env.NODE_ENV !== "production"
-            ? JSON.stringify(
-                {
-                  url: requestUrl,
-                  method: "POST",
-                  status: response.status,
-                  statusText: response.statusText,
-                  response: responseBody,
-                },
-                null,
-                2,
-              )
-            : undefined;
+        const responseError = getResponseErrorMessage(responseBody);
+        const debug = JSON.stringify(
+          {
+            url: requestUrl,
+            method: "POST",
+            status: response.status,
+            statusText: response.statusText,
+            response:
+              process.env.NODE_ENV !== "production"
+                ? responseBody
+                : responseError,
+          },
+          null,
+          2,
+        );
 
         showCheckoutToast(
-          response.status >= 500
-            ? "Сервер тимчасово недоступний. Зачекайте трохи та спробуйте ще раз."
-            : "Не вдалося оформити замовлення. Перевірте дані та спробуйте ще раз.",
+          `Не вдалося оформити замовлення (HTTP ${response.status}).${
+            responseError ? ` ${responseError}` : ""
+          }`,
           debug,
         );
         if (tg?.MainButton) {
@@ -334,27 +355,25 @@ export function CheckoutPage() {
       }
     } catch (error) {
       console.error("Checkout submit failed:", error);
-      const debug =
-        process.env.NODE_ENV !== "production"
-          ? JSON.stringify(
-              {
-                url: requestUrl,
-                method: "POST",
-                pageOrigin: window.location.origin,
-                error:
-                  error instanceof Error
-                    ? { name: error.name, message: error.message }
-                    : String(error),
-              },
-              null,
-              2,
-            )
-          : undefined;
+      const errorDetails =
+        error instanceof Error
+          ? { name: error.name, message: error.message }
+          : { message: String(error) };
+      const debug = JSON.stringify(
+        {
+          url: requestUrl,
+          method: "POST",
+          pageOrigin: window.location.origin,
+          error: errorDetails,
+        },
+        null,
+        2,
+      );
 
       showCheckoutToast(
-        error instanceof TypeError
-          ? "Не вдалося зв’язатися із сервером. Перевірте підключення до інтернету та спробуйте ще раз."
-          : "Сталася помилка під час оформлення. Спробуйте ще раз.",
+        `Не вдалося відправити запит на ${window.location.origin}${requestUrl}. ${
+          errorDetails.message || "Невідома помилка мережі."
+        }`,
         debug,
       );
 
