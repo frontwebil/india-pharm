@@ -11,10 +11,10 @@ export default function TelegramGuard() {
     const isAdminRoute =
       pathname.startsWith("/admin") || pathname.startsWith("/api");
 
-    // if (!tg?.initData && !isAdminRoute) {
-    //   window.location.replace(BOT_URL);
-    //   return;
-    // }
+    if (!tg?.initData && !isAdminRoute) {
+      window.location.replace(BOT_URL);
+      return;
+    }
 
     if (tg?.initData) {
       tg.ready();
