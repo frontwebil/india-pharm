@@ -484,24 +484,24 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
 
   if (isLoading || !isAllowed) {
     return (
-      <div className="min-h-screen bg-slate-950 text-white flex items-center justify-center">
+      <div className="min-h-screen bg-slate-50 text-slate-900 flex items-center justify-center">
         Завантаження...
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
+    <div className="min-h-screen bg-slate-50 text-slate-900">
       {isDeleteModalOpen && orderId ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 px-4">
-          <div className="w-full max-w-md rounded-2xl border border-slate-700 bg-slate-900 p-6 shadow-2xl shadow-slate-950/60">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-50/75 px-4">
+          <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl shadow-slate-200/80">
             <p className="text-xs uppercase tracking-[0.3em] text-rose-400">
               Підтвердження
             </p>
-            <h3 className="mt-3 text-2xl font-semibold text-white">
+            <h3 className="mt-3 text-2xl font-semibold text-slate-900">
               Точно хочете видалити?
             </h3>
-            <p className="mt-3 text-sm leading-6 text-slate-300">
+            <p className="mt-3 text-sm leading-6 text-slate-600">
               Замовлення #{orderId} буде видалено без можливості відновлення.
             </p>
 
@@ -516,7 +516,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                   setIsDeleteModalOpen(false);
                   setDeleteError("");
                 }}
-                className="cursor-pointer rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm font-medium text-slate-200 transition hover:border-slate-500 hover:text-white"
+                className="cursor-pointer rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:border-slate-500 hover:text-slate-900"
               >
                 Скасувати
               </button>
@@ -536,7 +536,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
       <div className="mx-auto max-w-6xl px-4 py-8">
         <div className="mb-6 flex items-center justify-between">
           <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-emerald-400">
+            <p className="text-xs uppercase tracking-[0.3em] text-blue-600">
               Order
             </p>
             <h1 className="mt-2 text-3xl font-semibold">
@@ -545,20 +545,20 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
           </div>
           <Link
             href="/admin"
-            className="rounded-xl border border-slate-700 bg-slate-900 px-4 py-2 text-sm font-medium text-slate-200 transition hover:border-emerald-500 hover:text-white"
+            className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-blue-600 hover:text-blue-700"
           >
             Назад до панелі
           </Link>
         </div>
 
         {orderId && (
-          <div className="mb-6 rounded-2xl border border-slate-800 bg-slate-900 p-5">
+          <div className="mb-6 rounded-2xl border border-slate-200 bg-white p-5">
             <div className="mb-4 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div>
-                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500">
                   Замовлення #{orderId}
                 </p>
-                <h2 className="mt-2 text-xl font-semibold text-white">
+                <h2 className="mt-2 text-xl font-semibold text-slate-900">
                   Інформація про замовлення
                 </h2>
               </div>
@@ -575,7 +575,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                       });
                     });
                   }}
-                  className="cursor-pointer rounded-xl bg-emerald-500 px-4 py-2.5 font-medium text-slate-950 transition hover:bg-emerald-400"
+                  className="cursor-pointer rounded-xl bg-blue-600 px-4 py-2.5 font-medium text-white transition hover:bg-blue-500"
                 >
                   Редагувати
                 </button>
@@ -585,7 +585,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                     setDeleteError("");
                     setIsDeleteModalOpen(true);
                   }}
-                  className="cursor-pointer rounded-xl border border-rose-500/70 bg-rose-500/10 px-4 py-2.5 font-medium text-rose-200 transition hover:border-rose-400 hover:bg-rose-500/20"
+                  className="cursor-pointer rounded-xl border border-red-600 bg-rose-500/10 px-4 py-2.5 font-medium text-red-600 transition hover:border-rose-400 hover:bg-rose-500/20"
                 >
                   Видалити
                 </button>
@@ -593,46 +593,46 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-              <div className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">
+              <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500">
                   Клієнт
                 </p>
-                <p className="mt-1 font-medium text-white">
+                <p className="mt-1 font-medium text-slate-900">
                   {formValues.name || "Без імені"}
                 </p>
               </div>
-              <div className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">
+              <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500">
                   Телефон
                 </p>
-                <p className="mt-1 font-medium text-white">
+                <p className="mt-1 font-medium text-slate-900">
                   {formValues.phone || "—"}
                 </p>
               </div>
-              <div className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">
+              <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500">
                   Зв’язок
                 </p>
-                <p className="mt-1 font-medium text-white">
+                <p className="mt-1 font-medium text-slate-900">
                   {formValues.prefferContactMethod === "telegram"
                     ? `@${formValues.userTelegram || "username"}`
                     : "Телефонний дзвінок"}
                 </p>
               </div>
-              <div className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">
+              <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500">
                   Статус
                 </p>
-                <p className="mt-1 font-medium text-white">
+                <p className="mt-1 font-medium text-slate-900">
                   {STATUS_LABELS[status] ?? status}
                 </p>
               </div>
 
-              <div className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">
+              <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500">
                   Дата створення
                 </p>
-                <p className="mt-1 font-medium text-white">
+                <p className="mt-1 font-medium text-slate-900">
                   {createdAt
                     ? new Date(createdAt).toLocaleString("uk-UA", {
                         day: "2-digit",
@@ -644,51 +644,51 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                     : "—"}
                 </p>
               </div>
-              <div className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">
+              <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500">
                   Доставка
                 </p>
-                <p className="mt-1 font-medium text-white">
+                <p className="mt-1 font-medium text-slate-900">
                   {selectedDelivery === "nova-poshta"
                     ? `Нова пошта · ${deliveryPointType === "postomat" ? "Поштомат" : "Відділення"}`
                     : "Укрпошта"}
                 </p>
               </div>
-              <div className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">
+              <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500">
                   Оплата
                 </p>
-                <p className="mt-1 font-medium text-white">
+                <p className="mt-1 font-medium text-slate-900">
                   {formValues.paymentType === "cash-on-delivery"
                     ? "Накладний платіж"
                     : "Оплата на рахунок"}
                 </p>
               </div>
-              <div className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">
+              <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500">
                   Сума
                 </p>
-                <p className="mt-1 font-medium text-white">{total} грн</p>
+                <p className="mt-1 font-medium text-slate-900">{total} грн</p>
               </div>
 
-              <div className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 sm:col-span-2 xl:col-span-2">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">
+              <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 sm:col-span-2 xl:col-span-2">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500">
                   Адреса / склад
                 </p>
-                <p className="mt-1 font-medium text-white">
+                <p className="mt-1 font-medium text-slate-900">
                   {novaPoshtaMeta.cityName || formValues.adress || "Без адреси"}
                 </p>
                 {novaPoshtaMeta.warehouseName ? (
-                  <p className="mt-1 text-sm text-slate-300">
+                  <p className="mt-1 text-sm text-slate-600">
                     {novaPoshtaMeta.warehouseName}
                   </p>
                 ) : null}
               </div>
-              <div className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 sm:col-span-2 xl:col-span-2">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">
+              <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 sm:col-span-2 xl:col-span-2">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500">
                   Товари
                 </p>
-                <div className="mt-2 space-y-1 text-sm text-slate-200">
+                <div className="mt-2 space-y-1 text-sm text-slate-700">
                   {orderProducts.length === 0 ? (
                     <span>Товари відсутні</span>
                   ) : (
@@ -703,7 +703,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                             ? ` · ${item.selectedVariant}`
                             : ""}
                         </span>
-                        <span className="text-slate-400">
+                        <span className="text-slate-500">
                           {item.quantity} × {item.price} грн
                         </span>
                       </div>
@@ -713,11 +713,13 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
               </div>
 
               {status === "Delived" || ttn ? (
-                <div className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 sm:col-span-2 xl:col-span-2">
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">
+                <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 sm:col-span-2 xl:col-span-2">
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500">
                     ТТН
                   </p>
-                  <p className="mt-1 font-medium text-white">{ttn || "—"}</p>
+                  <p className="mt-1 font-medium text-slate-900">
+                    {ttn || "—"}
+                  </p>
                 </div>
               ) : null}
             </div>
@@ -730,12 +732,12 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
             onSubmit={handleSubmit}
             className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]"
           >
-            <div className="space-y-6 rounded-2xl border border-slate-800 bg-slate-900 p-6">
+            <div className="space-y-6 rounded-2xl border border-slate-200 bg-white p-6">
               <section className="space-y-4">
                 <h2 className="text-xl font-semibold">Контактні дані</h2>
                 <div className="grid gap-4 md:grid-cols-2">
                   <label className="block">
-                    <span className="mb-2 block text-sm text-slate-300">
+                    <span className="mb-2 block text-sm text-slate-600">
                       Ім’я
                     </span>
                     <input
@@ -746,11 +748,11 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                           name: event.target.value,
                         }))
                       }
-                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2.5 text-white outline-none focus:border-emerald-500"
+                      className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 outline-none focus:border-blue-500"
                     />
                   </label>
                   <label className="block">
-                    <span className="mb-2 block text-sm text-slate-300">
+                    <span className="mb-2 block text-sm text-slate-600">
                       Телефон
                     </span>
                     <input
@@ -761,7 +763,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                           phone: event.target.value,
                         }))
                       }
-                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2.5 text-white outline-none focus:border-emerald-500"
+                      className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 outline-none focus:border-blue-500"
                       placeholder="+380..."
                     />
                   </label>
@@ -769,7 +771,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
 
                 {selectedDelivery !== "nova-poshta" && (
                   <label className="block">
-                    <span className="mb-2 block text-sm text-slate-300">
+                    <span className="mb-2 block text-sm text-slate-600">
                       Адреса / відділення
                     </span>
                     <textarea
@@ -780,7 +782,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                           adress: event.target.value,
                         }))
                       }
-                      className="min-h-[104px] w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2.5 text-white outline-none focus:border-emerald-500"
+                      className="min-h-[104px] w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 outline-none focus:border-blue-500"
                     />
                   </label>
                 )}
@@ -795,7 +797,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                   ].map((option) => (
                     <label
                       key={option.value}
-                      className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-700 bg-slate-950 p-3"
+                      className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3"
                     >
                       <input
                         type="radio"
@@ -810,7 +812,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                 </div>
 
                 {selectedDelivery === "nova-poshta" && (
-                  <div className="space-y-4 rounded-xl border border-slate-700 bg-slate-950 p-4">
+                  <div className="space-y-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
                     <div className="grid gap-3 md:grid-cols-2">
                       {[
                         { value: "branch", label: "Відділення" },
@@ -818,7 +820,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                       ].map((option) => (
                         <label
                           key={option.value}
-                          className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-700 bg-slate-900 p-3 text-sm"
+                          className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200 bg-white p-3 text-sm"
                         >
                           <input
                             type="radio"
@@ -847,7 +849,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
               <section className="space-y-4">
                 <h2 className="text-xl font-semibold">Оплата й контакт</h2>
                 <div className="grid gap-3 md:grid-cols-2">
-                  <label className="flex items-center gap-3 rounded-xl border border-slate-700 bg-slate-950 p-3">
+                  <label className="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
                     <input
                       type="radio"
                       checked={formValues.paymentType === "cash-on-delivery"}
@@ -861,7 +863,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                     />
                     <span>Накладний платіж</span>
                   </label>
-                  <label className="flex items-center gap-3 rounded-xl border border-slate-700 bg-slate-950 p-3">
+                  <label className="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
                     <input
                       type="radio"
                       checked={formValues.paymentType === "bank-transfer"}
@@ -878,7 +880,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                 </div>
 
                 <div className="grid gap-3 md:grid-cols-2">
-                  <label className="flex items-center gap-3 rounded-xl border border-slate-700 bg-slate-950 p-3">
+                  <label className="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
                     <input
                       type="radio"
                       checked={formValues.prefferContactMethod === "telegram"}
@@ -892,7 +894,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                     />
                     <span>Telegram</span>
                   </label>
-                  <label className="flex items-center gap-3 rounded-xl border border-slate-700 bg-slate-950 p-3">
+                  <label className="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
                     <input
                       type="radio"
                       checked={formValues.prefferContactMethod === "phone-call"}
@@ -910,7 +912,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
 
                 <div className="grid gap-4 md:grid-cols-2">
                   <label className="block">
-                    <span className="mb-2 block text-sm text-slate-300">
+                    <span className="mb-2 block text-sm text-slate-600">
                       Telegram chat id
                     </span>
                     <input
@@ -921,11 +923,11 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                           userChatId: event.target.value,
                         }))
                       }
-                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2.5 text-white outline-none focus:border-emerald-500"
+                      className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 outline-none focus:border-blue-500"
                     />
                   </label>
                   <label className="block">
-                    <span className="mb-2 block text-sm text-slate-300">
+                    <span className="mb-2 block text-sm text-slate-600">
                       Telegram username
                     </span>
                     <input
@@ -936,14 +938,14 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                           userTelegram: event.target.value,
                         }))
                       }
-                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2.5 text-white outline-none focus:border-emerald-500"
+                      className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 outline-none focus:border-blue-500"
                     />
                   </label>
                 </div>
               </section>
             </div>
 
-            <aside className="flex flex-col gap-6 rounded-2xl border border-slate-800 bg-slate-900 p-6">
+            <aside className="flex flex-col gap-6 rounded-2xl border border-slate-200 bg-white p-6">
               <div className="space-y-4">
                 <h2 className="text-xl font-semibold">Статус</h2>
                 <select
@@ -953,7 +955,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                     setStatus(nextStatus);
                     setSendTelegramNotification(nextStatus !== originalStatus);
                   }}
-                  className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2.5 text-white outline-none focus:border-emerald-500"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 outline-none focus:border-blue-500"
                 >
                   {Object.entries(STATUS_LABELS).map(([value, label]) => (
                     <option key={value} value={value}>
@@ -963,14 +965,14 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                 </select>
 
                 {isStatusChanged && (
-                  <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-slate-700 bg-slate-950 p-3 text-sm text-slate-200">
+                  <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700">
                     <input
                       type="checkbox"
                       checked={sendTelegramNotification}
                       onChange={() =>
                         setSendTelegramNotification((current) => !current)
                       }
-                      className="mt-1 h-4 w-4 rounded border-slate-500 bg-slate-900 text-emerald-500 focus:ring-emerald-500"
+                      className="mt-1 h-4 w-4 rounded border-slate-500 bg-white text-blue-600 focus:ring-emerald-500"
                     />
                     <span>Надсилати нотифікацію в Telegram</span>
                   </label>
@@ -978,13 +980,13 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
 
                 {status === "Delived" && (
                   <label className="block">
-                    <span className="mb-2 block text-sm text-slate-300">
+                    <span className="mb-2 block text-sm text-slate-600">
                       ТТН
                     </span>
                     <input
                       value={ttn}
                       onChange={(event) => setTtn(event.target.value)}
-                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2.5 text-white outline-none focus:border-emerald-500"
+                      className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 outline-none focus:border-blue-500"
                       placeholder="Введіть номер ТТН"
                     />
                   </label>
@@ -1019,7 +1021,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                           : "default",
                       );
                     }}
-                    className="flex-1 rounded-xl border border-slate-700 bg-slate-950 px-3 py-2.5 text-white outline-none focus:border-emerald-500"
+                    className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 outline-none focus:border-blue-500"
                   >
                     <option value="">Вибрати товар</option>
                     {catalog.map((product) => (
@@ -1037,13 +1039,13 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                         Math.max(1, Number(event.target.value) || 1),
                       )
                     }
-                    className="w-20 rounded-xl border border-slate-700 bg-slate-950 px-3 py-2.5 text-white outline-none focus:border-emerald-500"
+                    className="w-20 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 outline-none focus:border-blue-500"
                   />
                 </div>
 
                 {selectedProductId && (
                   <div className="space-y-2">
-                    <label className="block text-xs uppercase tracking-[0.2em] text-slate-400">
+                    <label className="block text-xs uppercase tracking-[0.2em] text-slate-500">
                       Варіант товару
                     </label>
                     <select
@@ -1051,7 +1053,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                       onChange={(event) =>
                         setSelectedProductVariantKey(event.target.value)
                       }
-                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2.5 text-white outline-none focus:border-emerald-500"
+                      className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 outline-none focus:border-blue-500"
                     >
                       {selectedProductVariants.length === 0 ? (
                         <option value="default">Стандартний варіант</option>
@@ -1077,25 +1079,27 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                 <button
                   type="button"
                   onClick={addProduct}
-                  className="cursor-pointer w-full rounded-xl bg-slate-800 px-4 py-2.5 font-medium text-white transition hover:bg-slate-700"
+                  className="cursor-pointer w-full rounded-xl bg-slate-100 px-4 py-2.5 font-medium text-slate-900 transition hover:bg-slate-200"
                 >
                   Додати товар
                 </button>
 
                 <div className="space-y-2">
                   {orderProducts.length === 0 ? (
-                    <p className="text-sm text-slate-400">
+                    <p className="text-sm text-slate-500">
                       Товари ще не додані
                     </p>
                   ) : (
                     orderProducts.map((item) => (
                       <div
                         key={`${item.productId}-${item.variantKey}-${item.packageName}`}
-                        className="flex items-center justify-between gap-3 rounded-xl border border-slate-700 bg-slate-950 p-3"
+                        className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3"
                       >
                         <div>
-                          <p className="font-medium text-white">{item.name}</p>
-                          <p className="text-xs text-slate-400">
+                          <p className="font-medium text-slate-900">
+                            {item.name}
+                          </p>
+                          <p className="text-xs text-slate-500">
                             {item.selectedVariant} · {item.quantity} ×{" "}
                             {item.price} грн
                           </p>
@@ -1111,7 +1115,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                               ),
                             )
                           }
-                          className="text-xs text-rose-300 hover:text-rose-200"
+                          className="cursor-pointer text-xs text-red-600 hover:text-red-500"
                         >
                           Видалити
                         </button>
@@ -1121,22 +1125,22 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                 </div>
               </div>
 
-              <div className="rounded-xl border border-slate-700 bg-slate-950 p-4">
-                <p className="text-sm text-slate-400">Разом</p>
-                <p className="mt-2 text-3xl font-semibold text-emerald-400">
+              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                <p className="text-sm text-slate-500">Разом</p>
+                <p className="mt-2 text-3xl font-semibold text-blue-600">
                   {total} грн
                 </p>
               </div>
 
               {submitError ? (
-                <p className="text-sm text-rose-400">{submitError}</p>
+                <p className="text-sm text-red-400">{submitError}</p>
               ) : null}
 
-              <div className="sticky bottom-0 mt-auto bg-slate-900 pt-4">
+              <div className="sticky bottom-0 mt-auto bg-white pt-4">
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="cursor-pointer w-full rounded-xl bg-emerald-500 px-4 py-3 font-medium text-slate-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-70"
+                  className="cursor-pointer w-full rounded-xl bg-blue-600 px-4 py-3 font-medium text-white transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-70"
                 >
                   {isSubmitting ? (
                     <span className="inline-flex items-center justify-center gap-2">

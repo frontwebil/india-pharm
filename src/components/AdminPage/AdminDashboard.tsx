@@ -303,36 +303,36 @@ export default function AdminDashboard() {
   };
 
   if (isLoading) {
-    return <div className="min-h-screen bg-slate-950 text-white flex items-center justify-center">Завантаження...</div>;
+    return <div className="min-h-screen bg-slate-50 text-slate-900 flex items-center justify-center">Завантаження...</div>;
   }
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-slate-950 px-4 py-12 text-white">
-        <div className="mx-auto max-w-md rounded-2xl border border-slate-700 bg-slate-900 p-8 shadow-2xl shadow-slate-950/40">
+      <div className="min-h-screen bg-slate-50 px-4 py-12 text-slate-900">
+        <div className="mx-auto max-w-md rounded-2xl border border-slate-200 bg-white p-8 shadow-2xl shadow-slate-950/40">
           <div className="mb-8 text-center">
-            <p className="text-xs uppercase tracking-[0.3em] text-emerald-400">Admin panel</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-blue-600">Admin panel</p>
             <h1 className="mt-3 text-3xl font-semibold">Вхід до панелі</h1>
           </div>
 
           <form onSubmit={handleLoginSubmit} className="space-y-5">
             <label className="block">
-              <span className="mb-2 block text-sm text-slate-300">Логін</span>
+              <span className="mb-2 block text-sm text-slate-600">Логін</span>
               <input
                 value={loginForm.login}
                 onChange={(event) => setLoginForm((currentForm) => ({ ...currentForm, login: event.target.value }))}
-                className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition focus:border-emerald-500"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-blue-500"
                 placeholder="admin"
               />
             </label>
 
             <label className="block">
-              <span className="mb-2 block text-sm text-slate-300">Пароль</span>
+              <span className="mb-2 block text-sm text-slate-600">Пароль</span>
               <input
                 type="password"
                 value={loginForm.password}
                 onChange={(event) => setLoginForm((currentForm) => ({ ...currentForm, password: event.target.value }))}
-                className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition focus:border-emerald-500"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-blue-500"
                 placeholder="••••••••"
               />
             </label>
@@ -341,7 +341,7 @@ export default function AdminDashboard() {
 
             <button
               type="submit"
-              className="w-full rounded-xl bg-emerald-500 px-4 py-3 font-medium text-slate-950 transition hover:bg-emerald-400"
+              className="w-full rounded-xl bg-blue-600 px-4 py-3 font-medium text-slate-950 transition hover:bg-blue-500"
             >
               Увійти
             </button>
@@ -352,52 +352,52 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
+    <div className="min-h-screen bg-slate-50 text-slate-900">
       <div className="mx-auto max-w-7xl px-4 py-8">
-        <header className="mb-8 flex flex-col gap-4 rounded-2xl border border-slate-800 bg-slate-900 p-6 md:flex-row md:items-center md:justify-between">
+        <header className="mb-8 flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-6 md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-emerald-400">India Pharm</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-blue-600">India Pharm</p>
             <h1 className="mt-2 text-3xl font-semibold">Адмін панель</h1>
           </div>
 
           <button
             type="button"
             onClick={handleLogout}
-            className="rounded-xl border border-slate-700 bg-slate-950 px-4 py-2 text-sm font-medium text-slate-200 transition hover:border-rose-500 hover:text-rose-300"
+            className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-rose-500 hover:text-rose-300"
           >
             Вийти
           </button>
         </header>
 
         <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
-            <p className="text-sm text-slate-400">Загальна кількість замовлень</p>
+          <div className="rounded-2xl border border-slate-200 bg-white p-5">
+            <p className="text-sm text-slate-500">Загальна кількість замовлень</p>
             <p className="mt-5 text-3xl font-semibold">{metrics.totalOrders}</p>
           </div>
-          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
-            <p className="text-sm text-slate-400">Нові замовлення</p>
+          <div className="rounded-2xl border border-slate-200 bg-white p-5">
+            <p className="text-sm text-slate-500">Нові замовлення</p>
             <p className="mt-5 text-3xl font-semibold text-amber-400">{metrics.newOrders}</p>
           </div>
-          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
-            <p className="text-sm text-slate-400">Кількість користувачів</p>
+          <div className="rounded-2xl border border-slate-200 bg-white p-5">
+            <p className="text-sm text-slate-500">Кількість користувачів</p>
             <p className="mt-5 text-3xl font-semibold text-cyan-400">{metrics.totalUsers}</p>
           </div>
-          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
-            <p className="text-sm text-slate-400">Останнє замовлення</p>
+          <div className="rounded-2xl border border-slate-200 bg-white p-5">
+            <p className="text-sm text-slate-500">Останнє замовлення</p>
             <p className="mt-5 text-xl font-semibold">{metrics.lastOrderDate}</p>
           </div>
         </section>
 
         <section className="mt-8 grid gap-6 xl:grid-cols-[1.4fr_0.6fr]">
-          <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900">
-            <div className="flex items-center justify-between border-b border-slate-800 px-5 py-4">
+          <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+            <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
               <h2 className="text-xl font-semibold">Список замовлень</h2>
-              <span className="rounded-full bg-slate-800 px-3 py-1 text-xs text-slate-300">{orders.length} записів</span>
+              <span className="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-600">{orders.length} записів</span>
             </div>
 
             <div className="overflow-x-auto">
               <table className="min-w-full text-left text-sm">
-                <thead className="bg-slate-950 text-slate-300">
+                <thead className="bg-slate-50 text-slate-600">
                   <tr>
                     <th className="px-5 py-3">Клієнт</th>
                     <th className="px-5 py-3">Статус</th>
@@ -409,39 +409,39 @@ export default function AdminDashboard() {
                 <tbody>
                   {orders.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="px-5 py-8 text-center text-slate-400">
+                      <td colSpan={5} className="px-5 py-8 text-center text-slate-500">
                         Немає замовлень
                       </td>
                     </tr>
                   ) : (
                     orders.map((order) => (
-                      <tr key={order.id} className="border-t border-slate-800">
+                      <tr key={order.id} className="border-t border-slate-200">
                         <td className="px-5 py-4">
                           <div>
-                            <p className="font-medium text-white">{order.name}</p>
-                            <p className="text-xs text-slate-400">{order.adress}</p>
+                            <p className="font-medium text-slate-900">{order.name}</p>
+                            <p className="text-xs text-slate-500">{order.adress}</p>
                           </div>
                         </td>
                         <td className="px-5 py-4">
-                          <span className="rounded-full bg-emerald-500/10 px-2.5 py-1 text-xs font-medium text-emerald-300">
+                          <span className="rounded-full bg-blue-600/10 px-2.5 py-1 text-xs font-medium text-emerald-300">
                             {STATUS_LABELS[order.status] ?? order.status}
                           </span>
                         </td>
-                        <td className="px-5 py-4 text-slate-300">{order.phone}</td>
-                        <td className="px-5 py-4 text-slate-300">{order.products.length}</td>
+                        <td className="px-5 py-4 text-slate-600">{order.phone}</td>
+                        <td className="px-5 py-4 text-slate-600">{order.products.length}</td>
                         <td className="px-5 py-4">
                           <div className="flex justify-end gap-2">
                             <button
                               type="button"
                               onClick={() => handleEditOrder(order)}
-                              className="cursor-pointer rounded-lg border border-slate-700 px-2.5 py-1.5 text-xs text-slate-200 hover:border-cyan-500 hover:text-cyan-300"
+                              className="cursor-pointer rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs text-slate-700 hover:border-cyan-500 hover:text-cyan-300"
                             >
                               Редагувати
                             </button>
                             <button
                               type="button"
                               onClick={() => void handleDeleteOrder(order.id)}
-                              className="rounded-lg border border-slate-700 px-2.5 py-1.5 text-xs text-slate-200 hover:border-rose-500 hover:text-rose-300"
+                              className="rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs text-slate-700 hover:border-rose-500 hover:text-rose-300"
                             >
                               Видалити
                             </button>
@@ -455,11 +455,11 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          <aside className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
+          <aside className="rounded-2xl border border-slate-200 bg-white p-5">
             <div className="mb-5 flex items-center justify-between">
               <h2 className="text-xl font-semibold">{editingId ? "Редагування" : "Нове замовлення"}</h2>
               {editingId ? (
-                <button type="button" onClick={resetForm} className="text-xs text-slate-300 hover:text-white">
+                <button type="button" onClick={resetForm} className="text-xs text-slate-600 hover:text-slate-900">
                   Скасувати
                 </button>
               ) : null}
@@ -469,26 +469,26 @@ export default function AdminDashboard() {
               <input
                 value={form.name}
                 onChange={(event) => handleFormChange("name", event.target.value)}
-                className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2.5 text-white outline-none focus:border-emerald-500"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 outline-none focus:border-blue-500"
                 placeholder="Ім'я"
               />
               <input
                 value={form.phone}
                 onChange={(event) => handleFormChange("phone", event.target.value)}
-                className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2.5 text-white outline-none focus:border-emerald-500"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 outline-none focus:border-blue-500"
                 placeholder="Телефон"
               />
               <textarea
                 value={form.adress}
                 onChange={(event) => handleFormChange("adress", event.target.value)}
-                className="min-h-[96px] w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2.5 text-white outline-none focus:border-emerald-500"
+                className="min-h-[96px] w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 outline-none focus:border-blue-500"
                 placeholder="Адреса"
               />
 
               <select
                 value={form.delivery}
                 onChange={(event) => handleFormChange("delivery", event.target.value)}
-                className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2.5 text-white outline-none focus:border-emerald-500"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 outline-none focus:border-blue-500"
               >
                 <option value="nova-poshta-branch">Нова Пошта (відділення)</option>
                 <option value="nova-poshta-courier">Нова Пошта (кур'єр)</option>
@@ -498,7 +498,7 @@ export default function AdminDashboard() {
               <select
                 value={form.status}
                 onChange={(event) => handleFormChange("status", event.target.value)}
-                className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2.5 text-white outline-none focus:border-emerald-500"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 outline-none focus:border-blue-500"
               >
                 {Object.entries(STATUS_LABELS).map(([value, label]) => (
                   <option key={value} value={value}>
@@ -507,14 +507,14 @@ export default function AdminDashboard() {
                 ))}
               </select>
 
-              <div className="rounded-xl border border-slate-700 bg-slate-950 p-3">
-                <p className="mb-2 text-xs uppercase tracking-[0.2em] text-slate-400">Товари</p>
+              <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                <p className="mb-2 text-xs uppercase tracking-[0.2em] text-slate-500">Товари</p>
 
                 <div className="flex gap-2">
                   <select
                     value={selectedProductId}
                     onChange={(event) => setSelectedProductId(event.target.value ? Number(event.target.value) : "")}
-                    className="flex-1 rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white outline-none focus:border-emerald-500"
+                    className="flex-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-blue-500"
                   >
                     <option value="">Вибрати товар</option>
                     {catalog.map((product) => (
@@ -529,34 +529,34 @@ export default function AdminDashboard() {
                     min={1}
                     value={selectedQuantity}
                     onChange={(event) => setSelectedQuantity(Math.max(1, Number(event.target.value) || 1))}
-                    className="w-20 rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white outline-none focus:border-emerald-500"
+                    className="w-20 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-blue-500"
                   />
                 </div>
 
                 <button
                   type="button"
                   onClick={addProductToOrder}
-                  className="cursor-pointer mt-3 w-full rounded-lg bg-slate-800 px-3 py-2 text-sm font-medium text-white transition hover:bg-slate-700"
+                  className="cursor-pointer mt-3 w-full rounded-lg bg-slate-100 px-3 py-2 text-sm font-medium text-slate-900 transition hover:bg-slate-200"
                 >
                   Додати товар
                 </button>
 
                 <div className="mt-3 space-y-2">
                   {form.products.length === 0 ? (
-                    <p className="text-xs text-slate-400">Товари ще не додані</p>
+                    <p className="text-xs text-slate-500">Товари ще не додані</p>
                   ) : (
                     form.products.map((item) => (
-                      <div key={`${item.productId}-${item.selectedVariant}`} className="flex items-center justify-between rounded-lg border border-slate-700 bg-slate-900 p-2">
+                      <div key={`${item.productId}-${item.selectedVariant}`} className="flex items-center justify-between rounded-lg border border-slate-200 bg-white p-2">
                         <div>
-                          <p className="text-sm font-medium text-white">{item.name}</p>
-                          <p className="text-xs text-slate-400">
+                          <p className="text-sm font-medium text-slate-900">{item.name}</p>
+                          <p className="text-xs text-slate-500">
                             {item.quantity} × {item.price} грн
                           </p>
                         </div>
                         <button
                           type="button"
                           onClick={() => handleRemoveProduct(item.productId)}
-                          className="text-xs text-rose-300 hover:text-rose-200"
+                          className="text-xs text-red-600 hover:text-rose-200"
                         >
                           Видалити
                         </button>
@@ -570,32 +570,32 @@ export default function AdminDashboard() {
                 <input
                   value={form.paymentType}
                   onChange={(event) => handleFormChange("paymentType", event.target.value)}
-                  className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2.5 text-white outline-none focus:border-emerald-500"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 outline-none focus:border-blue-500"
                   placeholder="Тип оплати"
                 />
                 <input
                   value={form.prefferContactMethod}
                   onChange={(event) => handleFormChange("prefferContactMethod", event.target.value)}
-                  className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2.5 text-white outline-none focus:border-emerald-500"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 outline-none focus:border-blue-500"
                   placeholder="Спосіб зв'язку"
                 />
                 <input
                   value={form.userChatId}
                   onChange={(event) => handleFormChange("userChatId", event.target.value)}
-                  className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2.5 text-white outline-none focus:border-emerald-500"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 outline-none focus:border-blue-500"
                   placeholder="Telegram chat ID"
                 />
                 <input
                   value={form.userTelegram}
                   onChange={(event) => handleFormChange("userTelegram", event.target.value)}
-                  className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2.5 text-white outline-none focus:border-emerald-500"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 outline-none focus:border-blue-500"
                   placeholder="Telegram user"
                 />
               </div>
 
               <button
                 type="submit"
-                className="cursor-pointer w-full rounded-xl bg-emerald-500 px-4 py-3 font-medium text-slate-950 transition hover:bg-emerald-400"
+                className="cursor-pointer w-full rounded-xl bg-blue-600 px-4 py-3 font-medium text-slate-950 transition hover:bg-blue-500"
               >
                 {editingId ? "Оновити замовлення" : "Зберегти замовлення"}
               </button>
