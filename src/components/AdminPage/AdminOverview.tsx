@@ -359,8 +359,8 @@ export default function AdminOverview() {
                           </div>
                         </td>
                         <td className="px-5 py-4 text-right whitespace-nowrap">
-                          <Link href={`/admin/orders/${order.id}/edit`} className="rounded-lg border border-slate-700 px-2.5 py-1.5 text-xs text-slate-200 transition hover:border-cyan-500 hover:text-cyan-300">
-                            Редагувати
+                          <Link href={`/admin/orders/${order.id}/edit`} className="cursor-pointer rounded-lg border border-slate-700 px-2.5 py-1.5 text-xs text-slate-200 transition hover:border-cyan-500 hover:text-cyan-300">
+                            Переглянути
                           </Link>
                         </td>
                       </tr>

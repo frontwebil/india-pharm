@@ -503,7 +503,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                     });
                   });
                 }}
-                className="rounded-xl bg-emerald-500 px-4 py-2.5 font-medium text-slate-950 transition hover:bg-emerald-400"
+                className="cursor-pointer rounded-xl bg-emerald-500 px-4 py-2.5 font-medium text-slate-950 transition hover:bg-emerald-400"
               >
                 Редагувати
               </button>
@@ -994,7 +994,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                 <button
                   type="button"
                   onClick={addProduct}
-                  className="w-full rounded-xl bg-slate-800 px-4 py-2.5 font-medium text-white transition hover:bg-slate-700"
+                  className="cursor-pointer w-full rounded-xl bg-slate-800 px-4 py-2.5 font-medium text-white transition hover:bg-slate-700"
                 >
                   Додати товар
                 </button>
@@ -1052,12 +1052,14 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full rounded-xl bg-emerald-500 px-4 py-3 font-medium text-slate-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-70"
+                className="cursor-pointer w-full rounded-xl bg-emerald-500 px-4 py-3 font-medium text-slate-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-70"
               >
                 {isSubmitting ? (
                   <span className="inline-flex items-center justify-center gap-2">
                     <span className="h-4 w-4 animate-spin rounded-full border-2 border-slate-950/30 border-t-slate-950" />
-                    {orderId ? "Оновлення замовлення..." : "Збереження замовлення..."}
+                    {orderId
+                      ? "Оновлення замовлення..."
+                      : "Збереження замовлення..."}
                   </span>
                 ) : orderId ? (
                   "Оновити замовлення"

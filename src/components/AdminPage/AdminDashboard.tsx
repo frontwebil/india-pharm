@@ -434,7 +434,7 @@ export default function AdminDashboard() {
                             <button
                               type="button"
                               onClick={() => handleEditOrder(order)}
-                              className="rounded-lg border border-slate-700 px-2.5 py-1.5 text-xs text-slate-200 hover:border-cyan-500 hover:text-cyan-300"
+                              className="cursor-pointer rounded-lg border border-slate-700 px-2.5 py-1.5 text-xs text-slate-200 hover:border-cyan-500 hover:text-cyan-300"
                             >
                               Редагувати
                             </button>
@@ -536,7 +536,7 @@ export default function AdminDashboard() {
                 <button
                   type="button"
                   onClick={addProductToOrder}
-                  className="mt-3 w-full rounded-lg bg-slate-800 px-3 py-2 text-sm font-medium text-white transition hover:bg-slate-700"
+                  className="cursor-pointer mt-3 w-full rounded-lg bg-slate-800 px-3 py-2 text-sm font-medium text-white transition hover:bg-slate-700"
                 >
                   Додати товар
                 </button>
@@ -595,7 +595,7 @@ export default function AdminDashboard() {
 
               <button
                 type="submit"
-                className="w-full rounded-xl bg-emerald-500 px-4 py-3 font-medium text-slate-950 transition hover:bg-emerald-400"
+                className="cursor-pointer w-full rounded-xl bg-emerald-500 px-4 py-3 font-medium text-slate-950 transition hover:bg-emerald-400"
               >
                 {editingId ? "Оновити замовлення" : "Зберегти замовлення"}
               </button>
