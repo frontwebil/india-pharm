@@ -193,6 +193,9 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [isEditorVisible, setIsEditorVisible] = useState(!orderId);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
   const formRef = useRef<HTMLFormElement | null>(null);
   const [formValues, setFormValues] = useState({
     name: "",
@@ -356,6 +359,33 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
     setSelectedQuantity(1);
   };
 
+  const handleDeleteOrder = async () => {
+    if (!orderId) {
+      return;
+    }
+
+    setDeleteError("");
+    setIsDeleting(true);
+
+    try {
+      const response = await fetch("/api/admin/orders", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: Number(orderId) }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete order");
+      }
+
+      router.push("/admin");
+    } catch {
+      setDeleteError("Не вдалося видалити замовлення");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setSubmitError("");
@@ -462,6 +492,47 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
 
   return (
     <div className="min-h-screen bg-slate-950 text-white">
+      {isDeleteModalOpen && orderId ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 px-4">
+          <div className="w-full max-w-md rounded-2xl border border-slate-700 bg-slate-900 p-6 shadow-2xl shadow-slate-950/60">
+            <p className="text-xs uppercase tracking-[0.3em] text-rose-400">
+              Підтвердження
+            </p>
+            <h3 className="mt-3 text-2xl font-semibold text-white">
+              Точно хочете видалити?
+            </h3>
+            <p className="mt-3 text-sm leading-6 text-slate-300">
+              Замовлення #{orderId} буде видалено без можливості відновлення.
+            </p>
+
+            {deleteError ? (
+              <p className="mt-3 text-sm text-rose-400">{deleteError}</p>
+            ) : null}
+
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsDeleteModalOpen(false);
+                  setDeleteError("");
+                }}
+                className="cursor-pointer rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm font-medium text-slate-200 transition hover:border-slate-500 hover:text-white"
+              >
+                Скасувати
+              </button>
+              <button
+                type="button"
+                onClick={() => void handleDeleteOrder()}
+                disabled={isDeleting}
+                className="cursor-pointer rounded-xl bg-rose-500 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-rose-400 disabled:cursor-not-allowed disabled:opacity-70"
+              >
+                {isDeleting ? "Видалення..." : "Так, видалити"}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
       <div className="mx-auto max-w-6xl px-4 py-8">
         <div className="mb-6 flex items-center justify-between">
           <div>
@@ -492,21 +563,33 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                 </h2>
               </div>
 
-              <button
-                type="button"
-                onClick={() => {
-                  setIsEditorVisible(true);
-                  requestAnimationFrame(() => {
-                    formRef.current?.scrollIntoView({
-                      behavior: "smooth",
-                      block: "start",
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsEditorVisible(true);
+                    requestAnimationFrame(() => {
+                      formRef.current?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                      });
                     });
-                  });
-                }}
-                className="cursor-pointer rounded-xl bg-emerald-500 px-4 py-2.5 font-medium text-slate-950 transition hover:bg-emerald-400"
-              >
-                Редагувати
-              </button>
+                  }}
+                  className="cursor-pointer rounded-xl bg-emerald-500 px-4 py-2.5 font-medium text-slate-950 transition hover:bg-emerald-400"
+                >
+                  Редагувати
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setDeleteError("");
+                    setIsDeleteModalOpen(true);
+                  }}
+                  className="cursor-pointer rounded-xl border border-rose-500/70 bg-rose-500/10 px-4 py-2.5 font-medium text-rose-200 transition hover:border-rose-400 hover:bg-rose-500/20"
+                >
+                  Видалити
+                </button>
+              </div>
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
@@ -860,7 +943,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
               </section>
             </div>
 
-            <aside className="space-y-6 rounded-2xl border border-slate-800 bg-slate-900 p-6">
+            <aside className="flex flex-col gap-6 rounded-2xl border border-slate-800 bg-slate-900 p-6">
               <div className="space-y-4">
                 <h2 className="text-xl font-semibold">Статус</h2>
                 <select
@@ -1049,24 +1132,26 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                 <p className="text-sm text-rose-400">{submitError}</p>
               ) : null}
 
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="cursor-pointer w-full rounded-xl bg-emerald-500 px-4 py-3 font-medium text-slate-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-70"
-              >
-                {isSubmitting ? (
-                  <span className="inline-flex items-center justify-center gap-2">
-                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-slate-950/30 border-t-slate-950" />
-                    {orderId
-                      ? "Оновлення замовлення..."
-                      : "Збереження замовлення..."}
-                  </span>
-                ) : orderId ? (
-                  "Оновити замовлення"
-                ) : (
-                  "Зберегти замовлення"
-                )}
-              </button>
+              <div className="sticky bottom-0 mt-auto bg-slate-900 pt-4">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="cursor-pointer w-full rounded-xl bg-emerald-500 px-4 py-3 font-medium text-slate-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-70"
+                >
+                  {isSubmitting ? (
+                    <span className="inline-flex items-center justify-center gap-2">
+                      <span className="h-4 w-4 animate-spin rounded-full border-2 border-slate-950/30 border-t-slate-950" />
+                      {orderId
+                        ? "Оновлення замовлення..."
+                        : "Збереження замовлення..."}
+                    </span>
+                  ) : orderId ? (
+                    "Оновити замовлення"
+                  ) : (
+                    "Зберегти замовлення"
+                  )}
+                </button>
+              </div>
             </aside>
           </form>
         )}
