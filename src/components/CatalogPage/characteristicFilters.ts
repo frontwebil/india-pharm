@@ -147,12 +147,46 @@ function compareFilterValues(a: string, b: string) {
 }
 
 export function buildFilterFacets(products: Product[]): FilterFacet[] {
+  if (products.length === 0) {
+    return [];
+  }
+
+  const minimumCoverage = 0.6;
+  const productCount = products.length;
+  const keyCounts = new Map<string, number>();
+
+  for (const product of products) {
+    const characteristics = parseCharacteristics(product.characteristics);
+
+    for (const key of Object.keys(characteristics)) {
+      if (isExcludedFilterKey(key)) {
+        continue;
+      }
+
+      keyCounts.set(key, (keyCounts.get(key) ?? 0) + 1);
+    }
+  }
+
+  const eligibleKeys = new Set(
+    [...keyCounts.entries()]
+      .filter(([, count]) => count / productCount >= minimumCoverage)
+      .map(([key]) => key),
+  );
+
+  if (eligibleKeys.size === 0) {
+    return [];
+  }
+
   const valuesByKey = new Map<string, Set<string>>();
 
   for (const product of products) {
     const characteristics = parseCharacteristics(product.characteristics);
 
     for (const [key, values] of Object.entries(characteristics)) {
+      if (!eligibleKeys.has(key)) {
+        continue;
+      }
+
       let bucket = valuesByKey.get(key);
 
       if (!bucket) {
@@ -171,9 +205,7 @@ export function buildFilterFacets(products: Product[]): FilterFacet[] {
       key,
       values: [...values].sort(compareFilterValues),
     }))
-    .filter(
-      (facet) => facet.values.length > 1 && !isExcludedFilterKey(facet.key),
-    )
+    .filter((facet) => facet.values.length > 1)
     .sort((a, b) => a.key.localeCompare(b.key, "uk"));
 }
 
@@ -212,7 +244,8 @@ export function toggleFilterValue(
     : [...current, value];
 
   if (nextValues.length === 0) {
-    const { [key]: _, ...rest } = selectedFilters;
+    const rest = { ...selectedFilters };
+    delete rest[key];
 
     return rest;
   }
