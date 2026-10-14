@@ -21,28 +21,28 @@ type LocationInfo = {
 };
 
 export function Hero() {
-  const [locationInfo, setLocationInfo] = useState<LocationInfo | null>(null);
+  // const [locationInfo, setLocationInfo] = useState<LocationInfo | null>(null);
 
-  useEffect(() => {
-    const fetchLocation = async () => {
-      try {
-        const response = await fetch("/api/location", {
-          cache: "no-store",
-        });
+  // useEffect(() => {
+  //   const fetchLocation = async () => {
+  //     try {
+  //       const response = await fetch("/api/location", {
+  //         cache: "no-store",
+  //       });
 
-        if (!response.ok) {
-          return;
-        }
+  //       if (!response.ok) {
+  //         return;
+  //       }
 
-        const data = (await response.json()) as LocationInfo;
-        setLocationInfo(data);
-      } catch (error) {
-        console.error("Location fetch failed", error);
-      }
-    };
+  //       const data = (await response.json()) as LocationInfo;
+  //       setLocationInfo(data);
+  //     } catch (error) {
+  //       console.error("Location fetch failed", error);
+  //     }
+  //   };
 
-    fetchLocation();
-  }, []);
+  //   fetchLocation();
+  // }, []);
   return (
     <section className="hero">
       <div className="hero-banner">
@@ -76,7 +76,7 @@ export function Hero() {
             здоров{`'`}я з гарантією якості та швидкою доставкою.
           </p>
 
-          {locationInfo && (
+          {/* {locationInfo && (
             <div className="mt-4 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-900 shadow-sm">
               <div className="font-semibold">Тестове визначення країни:</div>
               <div>Країна: {locationInfo.country}</div>
@@ -84,7 +84,7 @@ export function Hero() {
               <div>IP: {locationInfo.ip}</div>
               <div>Мова: {locationInfo.language}</div>
             </div>
-          )}
+          )} */}
 
           <div className="hero-actions">
             <Link href="/catalog" className="hero-btn-primary">

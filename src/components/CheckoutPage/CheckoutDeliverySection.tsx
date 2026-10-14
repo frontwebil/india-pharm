@@ -130,7 +130,7 @@ export function CheckoutDeliverySection({
             <input name="payment" type="radio" value="cash-on-delivery" />
             <span className="checkout-radio-mark" />
             <span className="checkout-choice-copy">
-              <strong>Накладений платіж</strong>
+              <strong>Післяплата</strong>
               <small>Оплата при отриманні</small>
             </span>
           </label>
