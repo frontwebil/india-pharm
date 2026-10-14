@@ -1,6 +1,3 @@
-import Link from "next/link";
-import { TELEGRAM_BOT_URL } from "@/config/telegram";
-
 export default function BlockedPage() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 text-white">
