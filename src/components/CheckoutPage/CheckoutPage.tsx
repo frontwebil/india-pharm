@@ -562,7 +562,7 @@ export function CheckoutPage() {
                       <input name="contact" type="radio" value="no-contact" />
                       <span className="checkout-radio-mark" />
                       <span className="checkout-choice-copy">
-                        <strong>Не контактувати</strong>
+                        <strong>Не перезванювати</strong>
                         <small>Не дзвонити й не писати в месенджер</small>
                       </span>
                     </label>

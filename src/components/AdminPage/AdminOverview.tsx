@@ -141,7 +141,7 @@ export default function AdminOverview() {
     }
 
     if (order.prefferContactMethod === "no-contact") {
-      return "Не контактувати";
+      return "Не перезванювати";
     }
 
     if (order.prefferContactMethod === "phone-call") {

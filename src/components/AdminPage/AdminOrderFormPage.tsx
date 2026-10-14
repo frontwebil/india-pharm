@@ -210,7 +210,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
   const contactMethodLabels: Record<string, string> = {
     telegram: "Telegram",
     "phone-call": "Телефонний дзвінок",
-    "no-contact": "Не контактувати",
+    "no-contact": "Не перезванювати",
   };
 
   const selectedProduct = useMemo(
@@ -927,7 +927,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                       }
                       name="contact"
                     />
-                    <span>Не контактувати</span>
+                    <span>Не перезванювати</span>
                   </label>
                 </div>
 
