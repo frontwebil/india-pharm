@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-
-const BOT_URL = "https://t.me/india_pharm_bot";
+import { TELEGRAM_BOT_URL } from "@/config/telegram";
 
 export default function TelegramGuard() {
   useEffect(() => {
@@ -12,7 +11,7 @@ export default function TelegramGuard() {
       pathname.startsWith("/admin") || pathname.startsWith("/api");
 
     if (!tg?.initData && !isAdminRoute) {
-      window.location.replace(BOT_URL);
+      window.location.replace(TELEGRAM_BOT_URL);
       return;
     }
 

@@ -9,6 +9,7 @@ import {
   FaShieldAlt,
   FaArrowRight,
 } from "react-icons/fa";
+import { TELEGRAM_BOT_URL } from "@/config/telegram";
 import "./style.css";
 
 export function Hero() {
@@ -52,7 +53,7 @@ export function Hero() {
             </Link>
 
             <a
-              href="https://t.me/iLyhaha1"
+              href={TELEGRAM_BOT_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="hero-btn-secondary"
