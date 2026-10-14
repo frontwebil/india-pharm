@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import {
   FaLock,
   FaTruck,
@@ -13,36 +12,7 @@ import {
 import { TELEGRAM_BOT_URL } from "@/config/telegram";
 import "./style.css";
 
-type LocationInfo = {
-  country: string;
-  region: string;
-  ip: string;
-  language: string;
-};
-
 export function Hero() {
-  // const [locationInfo, setLocationInfo] = useState<LocationInfo | null>(null);
-
-  // useEffect(() => {
-  //   const fetchLocation = async () => {
-  //     try {
-  //       const response = await fetch("/api/location", {
-  //         cache: "no-store",
-  //       });
-
-  //       if (!response.ok) {
-  //         return;
-  //       }
-
-  //       const data = (await response.json()) as LocationInfo;
-  //       setLocationInfo(data);
-  //     } catch (error) {
-  //       console.error("Location fetch failed", error);
-  //     }
-  //   };
-
-  //   fetchLocation();
-  // }, []);
   return (
     <section className="hero">
       <div className="hero-banner">
@@ -75,16 +45,6 @@ export function Hero() {
             Сертифіковані препарати та дженерики для чоловічого та жіночого
             здоров{`'`}я з гарантією якості та швидкою доставкою.
           </p>
-
-          {/* {locationInfo && (
-            <div className="mt-4 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-900 shadow-sm">
-              <div className="font-semibold">Тестове визначення країни:</div>
-              <div>Країна: {locationInfo.country}</div>
-              <div>Регіон: {locationInfo.region}</div>
-              <div>IP: {locationInfo.ip}</div>
-              <div>Мова: {locationInfo.language}</div>
-            </div>
-          )} */}
 
           <div className="hero-actions">
             <Link href="/catalog" className="hero-btn-primary">
