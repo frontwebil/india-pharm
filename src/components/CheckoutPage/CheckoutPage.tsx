@@ -563,7 +563,7 @@ export function CheckoutPage() {
                       <span className="checkout-radio-mark" />
                       <span className="checkout-choice-copy">
                         <strong>Не перезванювати</strong>
-                        <small>Не дзвонити й не писати в месенджер</small>
+                        <small>Не дзвонити , я впевнений в замовлені</small>
                       </span>
                     </label>
                   </div>
