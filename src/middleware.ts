@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 const BLOCKED_PATH = "/blocked";
+const TELEGRAM_URL = "https://t.me/india_pharm_bot";
 
 function getCountry(request: NextRequest): string {
   return (
@@ -43,8 +44,8 @@ export function middleware(request: NextRequest) {
     request.nextUrl.hostname === "localhost" ||
     request.nextUrl.hostname === "127.0.0.1";
 
-  if (!isLocalhost && country && country !== "UA" && pathname !== BLOCKED_PATH) {
-    return NextResponse.redirect(new URL(BLOCKED_PATH, request.url));
+  if (!isLocalhost && country && country !== "UA") {
+    return NextResponse.redirect(TELEGRAM_URL);
   }
 
   return NextResponse.next();
