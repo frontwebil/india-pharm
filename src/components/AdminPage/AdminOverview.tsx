@@ -140,6 +140,14 @@ export default function AdminOverview() {
       return username ? `@${username.replace(/^@/, "")}` : "Telegram";
     }
 
+    if (order.prefferContactMethod === "no-contact") {
+      return "Не контактувати";
+    }
+
+    if (order.prefferContactMethod === "phone-call") {
+      return order.phone || "—";
+    }
+
     return order.phone || "—";
   };
 
@@ -354,7 +362,7 @@ export default function AdminOverview() {
                   <th className="px-5 py-3 w-[220px] min-w-[220px]">Клієнт</th>
                   <th className="px-5 py-3 whitespace-nowrap">Статус</th>
                   <th className="px-5 py-3 whitespace-nowrap">Дата</th>
-                  <th className="px-5 py-3 whitespace-nowrap">Зв'язок</th>
+                  <th className="px-5 py-3 whitespace-nowrap">Зв’язок</th>
                   <th className="px-5 py-3 whitespace-nowrap">Контакти</th>
                   <th className="px-5 py-3 whitespace-nowrap">Товари</th>
                   <th className="px-5 py-3 text-right whitespace-nowrap">

@@ -207,6 +207,12 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
     prefferContactMethod: "telegram",
   });
 
+  const contactMethodLabels: Record<string, string> = {
+    telegram: "Telegram",
+    "phone-call": "Телефонний дзвінок",
+    "no-contact": "Не контактувати",
+  };
+
   const selectedProduct = useMemo(
     () =>
       catalog.find((product) => product.id === Number(selectedProductId)) ??
@@ -616,7 +622,8 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                 <p className="mt-1 font-medium text-slate-900">
                   {formValues.prefferContactMethod === "telegram"
                     ? `@${formValues.userTelegram || "username"}`
-                    : "Телефонний дзвінок"}
+                    : contactMethodLabels[formValues.prefferContactMethod] ??
+                      "Телефонний дзвінок"}
                 </p>
               </div>
               <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
@@ -879,7 +886,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                   </label>
                 </div>
 
-                <div className="grid gap-3 md:grid-cols-2">
+                <div className="grid gap-3 md:grid-cols-3">
                   <label className="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
                     <input
                       type="radio"
@@ -907,6 +914,20 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                       name="contact"
                     />
                     <span>Телефонний дзвінок</span>
+                  </label>
+                  <label className="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
+                    <input
+                      type="radio"
+                      checked={formValues.prefferContactMethod === "no-contact"}
+                      onChange={() =>
+                        setFormValues((current) => ({
+                          ...current,
+                          prefferContactMethod: "no-contact",
+                        }))
+                      }
+                      name="contact"
+                    />
+                    <span>Не контактувати</span>
                   </label>
                 </div>
 

@@ -256,7 +256,10 @@ export function CheckoutPage() {
       return;
     }
 
-    if (!userChatId || !userTelegram) {
+    if (
+      prefferContactMethod !== "no-contact" &&
+      (!userChatId || !userTelegram)
+    ) {
       showCheckoutToast(
         !userChatId
           ? "Не вдалося отримати дані Telegram. Відкрийте магазин у Telegram і спробуйте ще раз."
@@ -553,6 +556,14 @@ export function CheckoutPage() {
                       <span className="checkout-choice-copy">
                         <strong>Телефонний дзвінок</strong>
                         <small>Зателефонуємо за вказаним номером</small>
+                      </span>
+                    </label>
+                    <label className="checkout-choice">
+                      <input name="contact" type="radio" value="no-contact" />
+                      <span className="checkout-radio-mark" />
+                      <span className="checkout-choice-copy">
+                        <strong>Не контактувати</strong>
+                        <small>Не дзвонити й не писати в месенджер</small>
                       </span>
                     </label>
                   </div>
