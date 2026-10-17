@@ -1,5 +1,5 @@
-import MainPage from "@/components/MainPage/MainPage";
+import { CatalogPage } from "@/components/CatalogPage/CatalogPage";
 
 export default function Home() {
-  return <MainPage />;
+  return <CatalogPage />;
 }

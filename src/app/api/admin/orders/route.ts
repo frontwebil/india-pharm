@@ -5,7 +5,9 @@ import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 
 const TELEGRAM_NOTIFICATION_API_URL =
-  process.env.NOTIFICATION_API_URL ?? "http://localhost:8000/api/notificationTelegram";
+  process.env.NOTIFICATION_API_URL ??
+  "http://localhost:8000/api/notificationTelegram";
+const apiSecret = process.env.API_SECRET;
 
 const serializeOrder = (order: {
   id: bigint | number;
@@ -37,6 +39,10 @@ const serializeOrder = (order: {
   createdAt: order.createdAt ? new Date(order.createdAt).toISOString() : null,
 });
 
+if (!apiSecret) {
+  throw new Error("API_SECRET is not configured");
+}
+
 const requireAdminAccess = async () => {
   const cookieStore = await cookies();
   return cookieStore.get("admin_session")?.value === "authenticated";
@@ -48,6 +54,7 @@ const sendTelegramNotification = async (order: unknown) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "x-api-secret": apiSecret,
       },
       body: JSON.stringify({ order }),
     });
@@ -161,7 +168,10 @@ export async function PUT(request: Request) {
   };
 
   if (!payload.id) {
-    return NextResponse.json({ error: "Order id is required" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Order id is required" },
+      { status: 400 },
+    );
   }
 
   const orderId = BigInt(String(payload.id));
@@ -171,7 +181,9 @@ export async function PUT(request: Request) {
 
   const nextStatus = payload.status ?? currentOrder?.status ?? "New";
   const statusChanged =
-    !!currentOrder && currentOrder.status !== nextStatus && payload.status !== undefined;
+    !!currentOrder &&
+    currentOrder.status !== nextStatus &&
+    payload.status !== undefined;
 
   const record = await prisma.order.update({
     where: {
@@ -206,11 +218,16 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const payload = (await request.json().catch(() => ({}))) as { id?: number | string };
+  const payload = (await request.json().catch(() => ({}))) as {
+    id?: number | string;
+  };
   const orderId = payload.id ?? new URL(request.url).searchParams.get("id");
 
   if (!orderId) {
-    return NextResponse.json({ error: "Order id is required" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Order id is required" },
+      { status: 400 },
+    );
   }
 
   await prisma.order.delete({

@@ -1,6 +1,10 @@
 const LOCAL_ORDER_API_URL = "http://localhost:8000/api/order";
+const apiSecret = process.env.API_SECRET;
 
 export async function POST(request: Request) {
+  if (!apiSecret) {
+    throw new Error("API_SECRET is not configured");
+  }
   const orderApiUrl =
     process.env.ORDER_API_URL ??
     (process.env.NODE_ENV !== "production" ? LOCAL_ORDER_API_URL : "");
@@ -21,6 +25,7 @@ export async function POST(request: Request) {
       headers: {
         "Content-Type":
           request.headers.get("content-type") ?? "application/json",
+        "x-api-secret": apiSecret,
       },
       body: await request.text(),
       cache: "no-store",
