@@ -3,8 +3,8 @@ import { CatalogPage } from "@/components/CatalogPage/CatalogPage";
 export default function Catalog() {
   return (
     <>
-      {/* <CatalogPage /> */}
-      <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 text-white">
+      <CatalogPage />
+      {/* <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 text-white">
         <div className="max-w-xl rounded-2xl border border-white/10 bg-white/5 p-8 text-center shadow-2xl backdrop-blur-sm">
           <p className="mb-4 text-sm uppercase tracking-[0.3em] text-slate-300">
             503
@@ -16,7 +16,7 @@ export default function Catalog() {
             The website is currently unavailable. Please try again later.
           </p>
         </div>
-      </main>
+      </main> */}
     </>
   );
 }
