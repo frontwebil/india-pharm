@@ -539,19 +539,19 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
         </div>
       ) : null}
 
-      <div className="mx-auto max-w-6xl px-4 py-8">
-        <div className="mb-6 flex items-center justify-between">
-          <div>
+      <div className="mx-auto max-w-6xl overflow-hidden px-4 py-8">
+        <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="min-w-0">
             <p className="text-xs uppercase tracking-[0.3em] text-blue-600">
               Order
             </p>
-            <h1 className="mt-2 text-3xl font-semibold">
+            <h1 className="mt-2 text-2xl font-semibold sm:text-3xl">
               {orderId ? "Редагування замовлення" : "Нове замовлення"}
             </h1>
           </div>
           <Link
             href="/admin"
-            className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-blue-600 hover:text-blue-700"
+            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2 text-center text-sm font-medium text-slate-700 transition hover:border-blue-600 hover:text-blue-700 sm:w-auto"
           >
             Назад до панелі
           </Link>
@@ -737,9 +737,9 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
           <form
             ref={formRef}
             onSubmit={handleSubmit}
-            className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]"
+            className="grid min-w-0 gap-6 xl:grid-cols-[1.2fr_0.8fr]"
           >
-            <div className="space-y-6 rounded-2xl border border-slate-200 bg-white p-6">
+            <div className="min-w-0 space-y-6 rounded-2xl border border-slate-200 bg-white p-6">
               <section className="space-y-4">
                 <h2 className="text-xl font-semibold">Контактні дані</h2>
                 <div className="grid gap-4 md:grid-cols-2">
@@ -967,7 +967,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
               </section>
             </div>
 
-            <aside className="flex flex-col gap-6 rounded-2xl border border-slate-200 bg-white p-6">
+            <aside className="flex min-w-0 flex-col gap-6 rounded-2xl border border-slate-200 bg-white p-6">
               <div className="space-y-4">
                 <h2 className="text-xl font-semibold">Статус</h2>
                 <select
@@ -1018,7 +1018,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
               <div className="space-y-4">
                 <h2 className="text-xl font-semibold">Товари</h2>
 
-                <div className="flex gap-2">
+                <div className="flex flex-col gap-2 sm:flex-row">
                   <select
                     value={selectedProductId}
                     onChange={(event) => {
@@ -1043,7 +1043,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                           : "default",
                       );
                     }}
-                    className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 outline-none focus:border-blue-500"
+                    className="w-full flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 outline-none focus:border-blue-500"
                   >
                     <option value="">Вибрати товар</option>
                     {catalog.map((product) => (
@@ -1061,7 +1061,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                         Math.max(1, Number(event.target.value) || 1),
                       )
                     }
-                    className="w-20 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 outline-none focus:border-blue-500"
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 outline-none focus:border-blue-500 sm:w-20"
                   />
                 </div>
 
@@ -1115,13 +1115,13 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                     orderProducts.map((item) => (
                       <div
                         key={`${item.productId}-${item.variantKey}-${item.packageName}`}
-                        className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3"
+                        className="flex min-w-0 items-center justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3"
                       >
-                        <div>
-                          <p className="font-medium text-slate-900">
+                        <div className="min-w-0 flex-1">
+                          <p className="break-words font-medium text-slate-900">
                             {item.name}
                           </p>
-                          <p className="text-xs text-slate-500">
+                          <p className="break-words text-xs text-slate-500">
                             {item.selectedVariant} · {item.quantity} ×{" "}
                             {item.price} грн
                           </p>
@@ -1137,7 +1137,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                               ),
                             )
                           }
-                          className="cursor-pointer text-xs text-red-600 hover:text-red-500"
+                          className="shrink-0 cursor-pointer text-xs text-red-600 hover:text-red-500"
                         >
                           Видалити
                         </button>
