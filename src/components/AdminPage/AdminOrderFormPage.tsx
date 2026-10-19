@@ -622,8 +622,8 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                 <p className="mt-1 font-medium text-slate-900">
                   {formValues.prefferContactMethod === "telegram"
                     ? `@${formValues.userTelegram || "username"}`
-                    : contactMethodLabels[formValues.prefferContactMethod] ??
-                      "Телефонний дзвінок"}
+                    : (contactMethodLabels[formValues.prefferContactMethod] ??
+                      "Телефонний дзвінок")}
                 </p>
               </div>
               <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
@@ -667,7 +667,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                 </p>
                 <p className="mt-1 font-medium text-slate-900">
                   {formValues.paymentType === "cash-on-delivery"
-                    ? "Накладний платіж"
+                    ? "Післяплата"
                     : "Оплата на рахунок"}
                 </p>
               </div>
@@ -854,7 +854,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
               </section>
 
               <section className="space-y-4">
-                <h2 className="text-xl font-semibold">Оплата й контакт</h2>
+                <h2 className="text-xl font-semibold">Оплата</h2>
                 <div className="grid gap-3 md:grid-cols-2">
                   <label className="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
                     <input
@@ -868,7 +868,7 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                       }
                       name="paymentType"
                     />
-                    <span>Накладний платіж</span>
+                    <span>Післяплата</span>
                   </label>
                   <label className="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
                     <input
@@ -886,7 +886,8 @@ export default function AdminOrderFormPage({ orderId }: { orderId?: string }) {
                   </label>
                 </div>
 
-                <div className="grid gap-3 md:grid-cols-3">
+                <h2 className="text-xl font-semibold">Контакт</h2>
+                <div className="grid gap-3 md:grid-cols-2">
                   <label className="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
                     <input
                       type="radio"
