@@ -25,8 +25,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "India Pharm - Онлайн-магазин",
-  description: "Сертифіковані препарати з 100% анонімною доставкою по Україні",
+  title: "India",
+  description: "",
 };
 
 export default function RootLayout({
