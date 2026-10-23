@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const BLOCKED_PATH = "/error";
+const BLOCKED_PATH = "https://ilovemevibe.store";
 
 function getCountry(request: NextRequest): string {
   return (
