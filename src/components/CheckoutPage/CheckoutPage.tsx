@@ -230,10 +230,7 @@ export function CheckoutPage() {
 
     const cityRef = String(formData.get("cityRef") ?? "");
     const warehouseRef = String(formData.get("warehouseRef") ?? "");
-    if (
-      delivery === "nova-poshta" &&
-      (!cityRef || !warehouseRef)
-    ) {
+    if (delivery === "nova-poshta" && (!cityRef || !warehouseRef)) {
       setFieldErrors({ adress: true });
       showCheckoutToast("Оберіть місто та відділення або поштомат зі списку.");
       return;
@@ -362,7 +359,8 @@ export function CheckoutPage() {
     const formData = formRef.current
       ? new FormData(formRef.current)
       : new FormData();
-    const testDelivery = String(formData.get("delivery") ?? "") || "nova-poshta";
+    const testDelivery =
+      String(formData.get("delivery") ?? "") || "nova-poshta";
     const testDeliveryPointType =
       testDelivery === "nova-poshta"
         ? String(formData.get("deliveryPointType") ?? "") ||
@@ -373,8 +371,7 @@ export function CheckoutPage() {
       status: "New",
       name: String(formData.get("name") ?? "").trim() || "Локальний тест",
       phone: String(formData.get("phone") ?? "").trim() || "+380000000000",
-      adress:
-        String(formData.get("adress") ?? "").trim() || "Тестова адреса",
+      adress: String(formData.get("adress") ?? "").trim() || "Тестова адреса",
       delivery: testDeliveryPointType
         ? `${testDelivery}-${testDeliveryPointType}`
         : testDelivery,
@@ -383,9 +380,9 @@ export function CheckoutPage() {
       warehouseRef: String(formData.get("warehouseRef") ?? "") || null,
       cityName: String(formData.get("cityName") ?? "") || null,
       warehouseName: String(formData.get("warehouseName") ?? "") || null,
-      paymentType:
-        String(formData.get("payment") ?? "") || "cash-on-delivery",
-      prefferContactMethod: String(formData.get("contact") ?? "") || "phone-call",
+      paymentType: String(formData.get("payment") ?? "") || "cash-on-delivery",
+      prefferContactMethod:
+        String(formData.get("contact") ?? "") || "phone-call",
       userChatId: userChatId || "local-test",
       userTelegram: userTelegram || "local-test",
       products: orderItems.map((item) => ({
@@ -538,18 +535,16 @@ export function CheckoutPage() {
                 <fieldset className="checkout-choice-group checkout-contact">
                   <legend>Бажаний тип зв’язку</legend>
                   <div className="checkout-choice-options">
-                    <label className="checkout-choice">
-                      <input
-                        name="contact"
-                        type="radio"
-                        value="telegram"
-                      />
-                      <span className="checkout-radio-mark" />
-                      <span className="checkout-choice-copy">
-                        <strong>Telegram</strong>
-                        <small>Напишемо вам у месенджер</small>
-                      </span>
-                    </label>
+                    {!userTelegram && (
+                      <label className="checkout-choice">
+                        <input name="contact" type="radio" value="telegram" />
+                        <span className="checkout-radio-mark" />
+                        <span className="checkout-choice-copy">
+                          <strong>Telegram</strong>
+                          <small>Напишемо вам у месенджер</small>
+                        </span>
+                      </label>
+                    )}
                     <label className="checkout-choice">
                       <input name="contact" type="radio" value="phone-call" />
                       <span className="checkout-radio-mark" />
