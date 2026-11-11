@@ -4,6 +4,34 @@ import { NextResponse } from "next/server";
 
 const BATCH_SIZE = 500;
 
+const sendTelegramNotification = async (message: string) => {
+  try {
+    const response = await fetch(
+      `https://api.telegram.org/bot${process.env.API_BOT_NOTIFICATION}/sendMessage`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          chat_id: process.env.NOTIFICATION_CHAT,
+          text: message,
+          parse_mode: "HTML",
+        }),
+      },
+    );
+
+    if (!response.ok) {
+      console.error(
+        "Помилка відправки Telegram повідомлення:",
+        await response.text(),
+      );
+    }
+  } catch (error) {
+    console.error("Telegram notification error:", error);
+  }
+};
+
 const syncProducts = async (log: (message: string) => void) => {
   log("[СИНХРОНІЗАЦІЯ] Початок синхронізації...");
   log("[СИНХРОНІЗАЦІЯ] Отримання товарів з API...");
@@ -117,10 +145,13 @@ export async function GET(req: Request) {
   try {
     const count = await syncProducts(console.log);
 
-    return NextResponse.json({
-      success: true,
-      count,
-    });
+    await sendTelegramNotification(
+      `<b>Товари синхронізовано</b>\n\n` +
+        `Загальна кількість товарів: <b>${count}</b>\n` +
+        `Час: ${new Date().toLocaleString("uk-UA", { timeZone: "Europe/Kyiv" })}`,
+    );
+
+    return NextResponse.json({ success: true, count });
   } catch (error) {
     console.error(error);
 
