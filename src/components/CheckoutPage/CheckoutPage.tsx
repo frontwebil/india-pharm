@@ -181,7 +181,7 @@ export function CheckoutPage() {
     0,
   );
   const userChatId = String(user?.id ?? "");
-  const userTelegram = String(user?.username ?? "");
+  const userTelegram = String(user?.username ?? "Private");
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
