@@ -582,6 +582,13 @@
 
   .catalog-sidebar-header {
     margin-bottom: 20px;
+    flex-direction: column-reverse;
+    align-items: flex-end;
+  }
+
+  .catalog-categories-toggle{
+    width: 100%;
+    margin-top: 20px;
   }
 
   .catalog-sidebar-close {
