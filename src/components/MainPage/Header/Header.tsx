@@ -109,13 +109,13 @@ export function Header() {
       <header className="header">
         <div className="header-container" ref={catalogRef}>
           <Link href="/" className="header-logo-link">
-            {/* <Image
-              src="/header-logo.webp"
+            <Image
+              src="/logo.webp"
               width={168}
-              height={84}
+              height={44}
               alt="India Pharm"
               className="header-logo"
-            /> */}
+            />
             <div className=""></div>
           </Link>
 

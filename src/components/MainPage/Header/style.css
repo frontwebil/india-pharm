@@ -35,7 +35,7 @@
 }
 
 .header-logo {
-  width: 168px;
+  width: 76px;
   height: auto;
 
   object-fit: contain;
@@ -604,7 +604,7 @@
   }
 
   .header-logo {
-    width: 100px;
+    width: 60px;
   }
 
   .header-container-right {
@@ -715,6 +715,6 @@
 
 @media (max-width: 380px) {
   .header-logo {
-    width: 100px;
+    width: 50px;
   }
 }
